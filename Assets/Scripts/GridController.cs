@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-
-    private (float x, float y) gameDimensions;
+    public int gameDimensionX;
+    public int gameDimensionY;
     private GameObject gridSprite;
     private (float x, float y) gridSpriteSize;
     public float boxSize { get; set; }
@@ -15,10 +15,9 @@ public class GridController : MonoBehaviour
     
     void Start()
     {
-        gameDimensions = (x: 5, y: 5);
         gridSprite = GameObject.Find("GridBG");
         gridSpriteSize = (x: gridSprite.transform.localScale.x, y: gridSprite.transform.localScale.y);
-        boxSize = gridSpriteSize.y / gameDimensions.y;
+        boxSize = gridSpriteSize.y / gameDimensionY; //always the smaller size. if we wanna do wacky stuff there'll have to be comparison
         Debug.Log($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
 
         Vector2 startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2, 
@@ -34,19 +33,19 @@ public class GridController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, xMove: -1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: -1);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, xMove: 1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: 1);
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, yMove: 1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, yMove: -1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
         }
     }
 }

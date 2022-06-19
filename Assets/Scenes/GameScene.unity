@@ -222,6 +222,14 @@ PrefabInstance:
       propertyPath: cursorPrefab
       value: 
       objectReference: {fileID: 8463095937945697698, guid: 03f4f5bcafa8bd2409f3f4c969680ff3, type: 3}
+    - target: {fileID: 3692159200809077594, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: gameDimensionX
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692159200809077594, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: gameDimensionY
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3692159200809077595, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_RootOrder
       value: 0
