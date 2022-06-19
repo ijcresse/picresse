@@ -5,34 +5,48 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
 
-    private Vector2 gridStart = new Vector2(0, 0);
-    // public GameObject cursor;
-    private (float x, float y) gridSize;
-    //unused right now, but should be the master of this property eventually
+    private (float x, float y) gameDimensions;
+    private GameObject gridSprite;
+    private (float x, float y) gridSpriteSize;
     public float boxSize { get; set; }
 
-    // Start is called before the first frame update
+    public GameObject cursorPrefab;
+    private CursorController cursorScript;
+    
     void Start()
     {
-        //y is negative to make cursor go down only
-        gridSize = (x: 5, y: -5);
-        boxSize = 0.5f;
-        // Instantiate(cursor, gridStart, cursor.transform.rotation);
+        gameDimensions = (x: 5, y: 5);
+        gridSprite = GameObject.Find("GridBG");
+        gridSpriteSize = (x: gridSprite.transform.localScale.x, y: gridSprite.transform.localScale.y);
+        boxSize = gridSpriteSize.y / gameDimensions.y;
+        Debug.Log($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
+
+        Vector2 startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2, 
+                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+
+        GameObject cursor = Instantiate(cursorPrefab, startPosition, cursorPrefab.transform.rotation);
+        cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
+        cursorScript = cursor.GetComponent<CursorController>();
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    public bool CanMove(Vector2 position)
-    {
-        // if (position.x >= 0 && position.x <= gridSize.x && position.y <= 0 && position.y >= gridSize.y)
-        // {
-        //     return true;
-        // }
-        // return false;
-        return true;
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, xMove: -1);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, xMove: 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, yMove: 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            cursorScript.Move(gameDimensions.x, gameDimensions.y, boxSize, yMove: -1);
+        }
     }
 }

@@ -5,57 +5,38 @@ using UnityEngine;
 public class CursorController : MonoBehaviour
 {
     private const int TOP_LAYER = 3;
-    private (float x, float y) HOME_POSITION = (-1f, 1.6f);
-    private (float x, float y) position;
-    private GridController gridScript;
-    private float boxSize = 0f;
+    private (int x, int y) gamePosition = (0, 0);
 
     void Start()
     {
-        gridScript = GameObject.Find("Grid").GetComponent<GridController>();
-        
         SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = TOP_LAYER;
-        boxSize = spriteRenderer.sprite.bounds.size.x;
-
-        position.x = this.gameObject.transform.position.x;
-        position.y = this.gameObject.transform.position.y;
-        Debug.Log($"starting position: ({position.x}, {position.y})");
-        Debug.Log($"boxSize: {boxSize}");
+        Debug.Log($"cursor starting position: ({gameObject.transform.position.x}, {gameObject.transform.position.y})");
     }
 
-    void Update()
-    {
-        (float x, float y) updatedPos = position;
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            updatedPos.x = position.x - boxSize;
-            Debug.Log($"moved left: {updatedPos.x}");
+    public bool Move(float xSize, float ySize, float boxSize, int xMove = 0, int yMove = 0) {
+        bool moved = false;
+        if (xMove > 0 && yMove > 0) {
+            Debug.Log($"Can't move two directions at once! ({xMove},{yMove})");
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            updatedPos.x = position.x + boxSize;
-            Debug.Log($"moved right: {updatedPos.x}");
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            updatedPos.y = position.y + boxSize;
-            Debug.Log($"moved up: {updatedPos.y}");
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            updatedPos.y = position.y - boxSize;
-            Debug.Log($"moved down: {updatedPos.y}");
+        if (xMove != 0) {
+            if (gamePosition.x - 1 >= 0 || gamePosition.x + 1 <= xSize) {
+                gamePosition.x += xMove;
+                moved = true;
+            }
+        } else if (yMove != 0) {
+            if (gamePosition.y - 1 >= 0 || gamePosition.y + 1 <= ySize) {
+                gamePosition.y += yMove;
+                moved = true;
+            }
         }
 
-        // if (!updatedPos.Equals(position) && gridScript.CanMove(updatedPos))
-        if (!updatedPos.Equals(position))
-        {
-            position = updatedPos;
-            //eventually this will be in constructor, as grid will need to know how big it is to scale down boxsize accordingly.
-            Vector2 adjustedPos = new Vector2(updatedPos.x, updatedPos.y);
-            Debug.Log($"attempting adjusted move to {adjustedPos.x}, {adjustedPos.y}");
-            transform.position = adjustedPos;
+        if (moved) {
+            Vector2 adjustedPos = gameObject.transform.position + new Vector3(xMove * boxSize, yMove * boxSize, 0);
+            Debug.Log($"start: ({gameObject.transform.position.x},{gameObject.transform.position.y}) :: moveTo: ({adjustedPos.x},{adjustedPos.y})");
+            gameObject.transform.position = adjustedPos;
         }
+
+        return moved;
     }
 }
