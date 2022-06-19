@@ -4,45 +4,56 @@ using UnityEngine;
 
 public class CursorController : MonoBehaviour
 {
-    private Vector2 position = new Vector2(0, 0);
+    private const int TOP_LAYER = 3;
+    private (float x, float y) HOME_POSITION = (-1f, 1.6f);
+    private (float x, float y) position;
     private GridController gridScript;
     private float boxSize = 0f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        Debug.Log($"starting position: ({position.x}, {position.y}");
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
-        boxSize = gameObject.GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+        
+        SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = TOP_LAYER;
+        boxSize = spriteRenderer.sprite.bounds.size.x;
+
+        position.x = this.gameObject.transform.position.x;
+        position.y = this.gameObject.transform.position.y;
+        Debug.Log($"starting position: ({position.x}, {position.y})");
         Debug.Log($"boxSize: {boxSize}");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector2 updatedPos = position + Vector2.zero;
+        (float x, float y) updatedPos = position;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            updatedPos += Vector2.left;
+            updatedPos.x = position.x - boxSize;
+            Debug.Log($"moved left: {updatedPos.x}");
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            updatedPos += Vector2.right;
+            updatedPos.x = position.x + boxSize;
+            Debug.Log($"moved right: {updatedPos.x}");
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            updatedPos += Vector2.up;
+            updatedPos.y = position.y + boxSize;
+            Debug.Log($"moved up: {updatedPos.y}");
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            updatedPos += Vector2.down;
+            updatedPos.y = position.y - boxSize;
+            Debug.Log($"moved down: {updatedPos.y}");
         }
 
-        if (!updatedPos.Equals(position) && gridScript.CanMove(updatedPos))
+        // if (!updatedPos.Equals(position) && gridScript.CanMove(updatedPos))
+        if (!updatedPos.Equals(position))
         {
             position = updatedPos;
             //eventually this will be in constructor, as grid will need to know how big it is to scale down boxsize accordingly.
-            Vector2 adjustedPos = new Vector2(position.x * boxSize, position.y * boxSize);
+            Vector2 adjustedPos = new Vector2(updatedPos.x, updatedPos.y);
             Debug.Log($"attempting adjusted move to {adjustedPos.x}, {adjustedPos.y}");
             transform.position = adjustedPos;
         }

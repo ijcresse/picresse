@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject cursor;
-    private Vector2 gridStart = new Vector2(0, 0);
+    public GameObject clock;
+    public GameObject grid;
+    public GameObject hintCols;
+    public GameObject hintRows;
+    
     
     void Start()
     {
-        Instantiate(cursor, gridStart, cursor.transform.rotation);
+        // Vector2 topLeft = new Vector2(0, 0);
+        // Instantiate(clock, topLeft, clock.transform.rotation);
+        // Instantiate(grid, topLeft, grid.transform.rotation);
+        // Instantiate(hintCols, topLeft, hintCols.transform.rotation);
+        // Instantiate(hintRows, topLeft, hintRows.transform.rotation);
+        // Instantiate(cursor, gridStart, cursor.transform.rotation);
     }
 
     void Update()
