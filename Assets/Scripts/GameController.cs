@@ -36,11 +36,11 @@ public class GameController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
+            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
         }
     }
 }
