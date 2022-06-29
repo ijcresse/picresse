@@ -135,6 +135,10 @@ PrefabInstance:
       value: Grid
       objectReference: {fileID: 0}
     - target: {fileID: 3692159200809077594, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: boxPrefab
+      value: 
+      objectReference: {fileID: 5210930790653465610, guid: ef2799c97b803ad4992b8ed7e9cfb947, type: 3}
+    - target: {fileID: 3692159200809077594, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: gameDimensionX
       value: 5
       objectReference: {fileID: 0}

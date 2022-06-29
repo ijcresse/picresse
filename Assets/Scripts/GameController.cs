@@ -41,6 +41,12 @@ public class GameController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
+        } else if (Input.GetKeyDown(KeyCode.Space)) {
+            (int x, int y) = cursorScript.GetGamePosition();
+            gridScript.SetCellState(x, y, true);
+        } else if (Input.GetKeyDown(KeyCode.LeftShift)) {
+            (int x, int y) = cursorScript.GetGamePosition();
+            gridScript.SetCellState(x, y, false);
         }
     }
 }

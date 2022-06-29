@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CursorController : MonoBehaviour
 {
-    private const int TOP_LAYER = 3;
+    private const int TOP_LAYER = 10;
     private (int x, int y) gamePosition = (0, 0);
     private Vector2 screenStartPosition;
 
@@ -51,5 +51,9 @@ public class CursorController : MonoBehaviour
         }
         gameObject.transform.position = adjustedPos;
         Debug.Log($"cursorCtrl.Move: gamePosition: ({gamePosition.x}, {gamePosition.y}). screenPosition: ({adjustedPos.x},{adjustedPos.y})");
+    }
+
+    public (int, int) GetGamePosition() {
+        return gamePosition;
     }
 }
