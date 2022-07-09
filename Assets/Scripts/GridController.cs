@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
-    public int gameDimensionX = 5;
-    public int gameDimensionY = 5;
+    public int gameDimensionX {get; set;}
+    public int gameDimensionY {get; set;}
     public GameObject boxPrefab;
     private GameObject [,] grid;
     private GameObject gridSprite;
@@ -17,12 +17,6 @@ public class GridController : MonoBehaviour
     {
         gridSprite = GameObject.Find("GridBG");
         gridSpriteSize = (x: gridSprite.transform.localScale.x, y: gridSprite.transform.localScale.y);
-        boxSize = gridSpriteSize.y / gameDimensionY; //always compare one direction to get a square. also, y is generally smaller (25 x 20)
-        DebugLog($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
-        startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2, 
-                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
-
-        SetUpGrid();
     }
 
     void Update() {
@@ -58,13 +52,19 @@ public class GridController : MonoBehaviour
         Debug.Log("GridController: " + s);
     }
 
-    void SetUpGrid() {
+    public void SetUpGrid() {
+        boxSize = gridSpriteSize.y / gameDimensionY; //always compare one direction to get a square. also, y is generally smaller (25 x 20)
+        DebugLog($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
+        startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2, 
+                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+
         grid = new GameObject[gameDimensionX, gameDimensionY];
         for (int i = 0; i < gameDimensionY; i++) {
             for (int j = 0; j < gameDimensionX; j++) {
                 Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
-                box.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
+                double temp = boxSize * 1.9;
+                box.transform.localScale = new Vector2((float) temp, (float) temp);
                 grid[j, i] = box;
             }
         }

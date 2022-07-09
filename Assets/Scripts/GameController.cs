@@ -4,21 +4,31 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public int gameDimensionX;
+    public int gameDimensionY;
     public GameObject clock;
     public GameObject hintCols;
     public GameObject hintRows;
     private GridController gridScript;
     public GameObject cursorPrefab;
     private CursorController cursorScript;
+    private PuzzleController puzzleScript;
     
     void Start()
     {
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
+        gridScript.gameDimensionX = gameDimensionX;
+        gridScript.gameDimensionY = gameDimensionY;
+        gridScript.SetUpGrid();
+        
         float boxSize = gridScript.boxSize;
 
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
+
+        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+        puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY);
     }
 
     void Update()
