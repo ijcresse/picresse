@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
         gridScript.gameDimensionX = gameDimensionX;
         gridScript.gameDimensionY = gameDimensionY;
         gridScript.SetUpGrid();
-        
+
         float boxSize = gridScript.boxSize;
 
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
