@@ -15,7 +15,7 @@ public class PuzzleController : MonoBehaviour
     }
 
     public void CreatePuzzle(int x, int y) {
-        Debug.Log($"PuzzleController.CreatePuzzle called for puzzle with size {x},{y}");
+        Debug.Log($"PuzzleController.CreatePuzzle called for puzzle with size {x} {y}");
         puzzle = new bool[y, x];
         for (int i = 0; i < y; i++) {
             string line = "";
@@ -27,6 +27,7 @@ public class PuzzleController : MonoBehaviour
         }
 
         hints = new Hint[(int) Mathf.Ceil(y / 2), (int) Mathf.Ceil(x / 2)];
+        Debug.Log($"created puzzle with {puzzle.GetLength(1)} cols, {puzzle.GetLength(0)} rows");
         CreateHints();
     }
 
@@ -34,34 +35,33 @@ public class PuzzleController : MonoBehaviour
 
     }
 
-    bool[] GetRow(int row) {
-        bool[] puzzleRow = new bool[puzzle.GetLength(0)];
-        for (int i = 0; i < puzzle.GetLength(0); i++) {
-            puzzleRow[i] = puzzle[row, i];
-        }
-        return puzzleRow;
-    }
-
     bool[] GetCol(int col) {
-        bool[] puzzleCol = new bool[puzzle.GetLength(1)];
-        for (int i = 0; i < puzzle.GetLength(1); i++) {
+        bool[] puzzleCol = new bool[puzzle.GetLength(0)];
+        for (int i = 0; i < puzzle.GetLength(0); i++) {
             puzzleCol[i] = puzzle[i, col];
         }
         return puzzleCol;
     }
 
-    
+    bool[] GetRow(int row) {
+        bool[] puzzleRow = new bool[puzzle.GetLength(1)];
+        for (int i = 0; i < puzzle.GetLength(1); i++) {
+            puzzleRow[i] = puzzle[row, i];
+        }
+        return puzzleRow;
+    }
+
     private void CreateHints() {
         hintColumns = new List<List<Hint>>();
         hintRows = new List<List<Hint>>();
         Debug.Log("creating hints for coluimns");
-        for (int y = 0; y < puzzle.GetLength(0); y++) {
-            bool[] col = GetCol(y);
+        for (int x = 0; x < puzzle.GetLength(1); x++) {
+            bool[] col = GetCol(x);
             hintColumns.Add(GetHints(col));
         }
         Debug.Log("now rows");
-        for (int x = 0; x < puzzle.GetLength(1); x++) {
-            bool[] row = GetRow(x);
+        for (int y = 0; y < puzzle.GetLength(0); y++) {
+            bool[] row = GetRow(y);
             hintRows.Add(GetHints(row));
         }
     }
