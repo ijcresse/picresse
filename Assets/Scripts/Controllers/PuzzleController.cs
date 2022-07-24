@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class PuzzleController : MonoBehaviour
 {
-    // public bool[,] puzzle;
     public List<List<bool>> puzzle;
-    private Hint[,] hints;
     private List<List<Hint>> hintColumns;
     private List<List<Hint>> hintRows;
 
@@ -17,20 +15,17 @@ public class PuzzleController : MonoBehaviour
 
     public void CreatePuzzle(int x, int y) {
         Debug.Log($"PuzzleController.CreatePuzzle called for puzzle with size {x} {y}");
-        // puzzle = new bool[y, x];
         puzzle = new List<List<bool>>();
         for (int i = 0; i < y; i++) {
             string line = "";
             puzzle.Add(new List<bool>());
             for (int j = 0; j < x; j++) {
-                // puzzle[i, j] = Random.Range(0f, 1f) <= 0.6f;
                 puzzle[i].Add(Random.Range(0f, 1f) <= 0.6f);
                 line += puzzle[i][j] ? 'o' : 'x';
             }
             Debug.Log(line);
         }
 
-        // hints = new Hint[(int) Mathf.Ceil(y / 2), (int) Mathf.Ceil(x / 2)];
         Debug.Log($"created puzzle with {puzzle.Count} cols, {puzzle[0].Count} rows");
         CreateHints();
     }
@@ -40,20 +35,16 @@ public class PuzzleController : MonoBehaviour
     }
 
     List<bool> GetCol(int col) {
-        // bool[] puzzleCol = new bool[puzzle.GetLength(0)];
         List<bool> puzzleCol = new List<bool>();
         for (int i = 0; i < puzzle.Count; i++) {
-            // puzzleCol[i] = puzzle[i, col];
             puzzleCol.Add(puzzle[i][col]);
         }
         return puzzleCol;
     }
 
     List<bool> GetRow(int row) {
-        // bool[] puzzleRow = new bool[puzzle.GetLength(1)];
         List<bool> puzzleRow = new List<bool>();
         for (int i = 0; i < puzzle[row].Count; i++) {
-            // puzzleRow[i] = puzzle[row, i];
             puzzleRow.Add(puzzle[row][i]);
         }
         return puzzleRow;
@@ -64,7 +55,6 @@ public class PuzzleController : MonoBehaviour
         hintRows = new List<List<Hint>>();
         Debug.Log("creating hints for coluimns");
         for (int x = 0; x < puzzle[0].Count; x++) {
-            // bool[] col = GetCol(x);
             List<bool> col = GetCol(x);
             hintColumns.Add(GetHints(col));
         }
@@ -91,7 +81,7 @@ public class PuzzleController : MonoBehaviour
                 }
             }
         }
-        if (num > 0) {
+        if (hints.Count == 0) {
             hints.Add(new Hint(num, false)); //bookends with last element, also covers 0 case
             debug = debug + ", " + num;
         }
@@ -186,14 +176,5 @@ public class PuzzleController : MonoBehaviour
                 bRunner = bPtr
                 while
         */
-    }
-
-    class Hint {
-        private int num {get; set;}
-        private bool solved {get; set;}
-        public Hint(int num, bool solved) {
-            this.num = num;
-            this.solved = solved;
-        }
     }
 }
