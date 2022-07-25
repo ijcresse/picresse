@@ -81,7 +81,7 @@ public class PuzzleController : MonoBehaviour
                 }
             }
         }
-        if (hints.Count == 0) {
+        if (hints.Count == 0 || num > 0) {
             hints.Add(new Hint(num, false)); //bookends with last element, also covers 0 case
             debug = debug + ", " + num;
         }
