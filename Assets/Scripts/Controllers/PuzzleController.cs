@@ -5,8 +5,11 @@ using UnityEngine;
 public class PuzzleController : MonoBehaviour
 {
     public List<List<bool>> puzzle;
-    private List<List<Hint>> hintColumns;
-    private List<List<Hint>> hintRows;
+    private List<HintLine> hintColumns;
+    // private List<List<Hint>> hintColumns;
+    private List<HintLine> hintRows;
+    // private List<List<Hint>> hintRows;
+    public GameObject hintLinePrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -51,19 +54,40 @@ public class PuzzleController : MonoBehaviour
     }
 
     private void CreateHints() {
-        hintColumns = new List<List<Hint>>();
-        hintRows = new List<List<Hint>>();
+        hintColumns = new List<HintLine>();
+        hintRows = new List<HintLine>();
         Debug.Log("creating hints for coluimns");
         for (int x = 0; x < puzzle[0].Count; x++) {
             List<bool> col = GetCol(x);
-            hintColumns.Add(GetHints(col));
+            CreateHintLine(GetHints(col), true, x);
         }
         Debug.Log("now rows");
         for (int y = 0; y < puzzle.Count; y++) {
-            // bool[] row = GetRow(y);
             List<bool> row = GetRow(y);
-            hintRows.Add(GetHints(row));
+            CreateHintLine(GetHints(row), false, y);
         }
+    }
+
+    private void CreateHintLine(List<Hint> hints, bool isCol, int position) {
+        GameObject hintBG = isCol ? GameObject.Find("HintColsBG") : GameObject.Find("HintRowsBG");
+        float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
+        GameObject hintLine = Instantiate(hintLinePrefab, hintBG.transform.position, hintLinePrefab.transform.rotation);
+        Vector2 updatedPosition;
+        Vector2 updatedScale;
+        if (isCol) {
+            updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2), 
+                                          hintBG.transform.position.y);
+            updatedScale = new Vector2(boxSize, hintBG.transform.localScale.y);
+            hintLine.transform.position = updatedPosition;
+            hintLine.transform.localScale = updatedScale;
+        } else {
+            updatedPosition = new Vector2(hintBG.transform.position.x, 
+                                          hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
+            updatedScale = new Vector2(hintBG.transform.localScale.x, boxSize);
+            hintLine.transform.position = updatedPosition;
+            hintLine.transform.localScale = updatedScale;
+        }
+        hintLine.GetComponent<HintLine>().Init(hints, isCol, position, position == 0);
     }
 
     List<Hint> GetHints(List<bool> puzzleLine) {
