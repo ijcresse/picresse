@@ -12,8 +12,8 @@ public class HintLine : MonoBehaviour
     int position; //leftmost/topmost is 0
     public GameObject hintTextPrefab;
     private TextMeshProUGUI hintText;
-    private SpriteRenderer hintLineSprite;
-    
+    public SpriteRenderer hintLineSprite;
+
     public void Init(List<Hint> hints, bool isCol, int position, bool active) {
         this.hints = hints;
         this.isCol = isCol;
@@ -34,7 +34,19 @@ public class HintLine : MonoBehaviour
         }
         hintText.text = text;
 
+        float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
+        Vector3 gamePos = isCol ?
+                            new Vector3(gameObject.transform.position.x + (boxSize / 2), gameObject.transform.position.y, 0f) :
+                            new Vector3(gameObject.transform.position.x - (boxSize / 2), gameObject.transform.position.y + (boxSize / 2), 0f);
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(gamePos);
+        Vector3 adjustedPos = new Vector3 (screenPos.x - (Screen.width / 2), screenPos.y - (Screen.height / 2), 0f);
+        hintText.GetComponent<RectTransform>().anchoredPosition3D = adjustedPos;
         EventSystem.current.onCursorMovedTo += OnActivated;
+
+        hintLineSprite = gameObject.GetComponent<SpriteRenderer>();
+        Color color = hintLineSprite.color;
+        color.a = active ? 100 : 0;
+        hintLineSprite.color = color;
     }
 
     private void CalculateSolved() {
@@ -45,14 +57,24 @@ public class HintLine : MonoBehaviour
         
     }
 
-    private void OnActivated(int x, int y) {
-        // Debug.Log($"HintLine: moving to {x}, {y}");
-        if (isCol && y == position) {
-            //activate
-        } else if (!isCol && x == position) {
-            //activate
+    private void OnActivated(int column, int row) { //ok one, we're having a problem with how the system adds/removes too much alpha. two, it says it's deactivating, but it's not?
+        Color color = hintLineSprite.color;
+        if (isCol && column == position) {
+            active = true;
+            color.a = 100;
+            Debug.Log($"HintLine: OnActivated. activating column {column}. color.a {color.a}");
+        } else if (!isCol && row == position) {
+            active = true;
+            color.a = 100;
+            Debug.Log($"HintLine: OnActivated. activating row {row}. color.a {color.a}");
         } else {
-            //deactivate
+            active = false;
+            color.a = 0;
+            Debug.Log($"HintLine: OnActivated. deactivating. color.a {color.a}");
+        }
+
+        if (hintLineSprite.color.a != color.a) { //update only when we detect an update!
+            hintLineSprite.color = color;
         }
     }
 

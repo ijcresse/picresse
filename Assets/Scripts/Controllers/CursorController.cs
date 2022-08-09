@@ -52,8 +52,7 @@ public class CursorController : MonoBehaviour
         gameObject.transform.position = adjustedPos;
 
         EventSystem.current.CursorMovedTo(gamePosition.x, gamePosition.y);
-        
-        Debug.Log($"cursorCtrl.Move: gamePosition: ({gamePosition.x}, {gamePosition.y}). screenPosition: ({adjustedPos.x},{adjustedPos.y})");
+    
     }
 
     public (int, int) GetGamePosition() {

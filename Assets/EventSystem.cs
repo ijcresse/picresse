@@ -13,9 +13,9 @@ public class EventSystem : MonoBehaviour
         current = this;
     }
 
-    public void CursorMovedTo(int x, int y) {
+    public void CursorMovedTo(int column, int row) {
         if (onCursorMovedTo != null) {
-            onCursorMovedTo(x, y);
+            onCursorMovedTo(column, row);
         } else {
             Debug.Log("ERROR EventSystem.CursorMovedTo: no registered listeners");
         }

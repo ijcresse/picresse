@@ -17,7 +17,6 @@ public class PuzzleController : MonoBehaviour
     }
 
     public void CreatePuzzle(int x, int y) {
-        Debug.Log($"PuzzleController.CreatePuzzle called for puzzle with size {x} {y}");
         puzzle = new List<List<bool>>();
         for (int i = 0; i < y; i++) {
             string line = "";
@@ -26,10 +25,7 @@ public class PuzzleController : MonoBehaviour
                 puzzle[i].Add(Random.Range(0f, 1f) <= 0.6f);
                 line += puzzle[i][j] ? 'o' : 'x';
             }
-            Debug.Log(line);
         }
-
-        Debug.Log($"created puzzle with {puzzle.Count} cols, {puzzle[0].Count} rows");
         CreateHints();
     }
 
@@ -56,12 +52,10 @@ public class PuzzleController : MonoBehaviour
     private void CreateHints() {
         hintColumns = new List<HintLine>();
         hintRows = new List<HintLine>();
-        Debug.Log("creating hints for coluimns");
         for (int x = 0; x < puzzle[0].Count; x++) {
             List<bool> col = GetCol(x);
             CreateHintLine(GetHints(col), true, x);
         }
-        Debug.Log("now rows");
         for (int y = 0; y < puzzle.Count; y++) {
             List<bool> row = GetRow(y);
             CreateHintLine(GetHints(row), false, y);
@@ -69,9 +63,13 @@ public class PuzzleController : MonoBehaviour
     }
 
     private void CreateHintLine(List<Hint> hints, bool isCol, int position) {
+        GameObject hintSection = isCol ? GameObject.Find("HintCols") : GameObject.Find("HintRows");
         GameObject hintBG = isCol ? GameObject.Find("HintColsBG") : GameObject.Find("HintRowsBG");
         float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
+
         GameObject hintLine = Instantiate(hintLinePrefab, hintBG.transform.position, hintLinePrefab.transform.rotation);
+        hintLine.transform.SetParent(hintSection.transform);
+
         Vector2 updatedPosition;
         Vector2 updatedScale;
         if (isCol) {
@@ -93,23 +91,19 @@ public class PuzzleController : MonoBehaviour
     List<Hint> GetHints(List<bool> puzzleLine) {
         List<Hint> hints = new List<Hint>();
         int num = 0;
-        string debug = "";
         for (int i = 0; i < puzzleLine.Count; i++) {
             if (puzzleLine[i]) {
                 num++;
             } else {
                 if (num > 0) {
                     hints.Add(new Hint(num, false));
-                    debug = debug + ", " + num;
                     num = 0;
                 }
             }
         }
         if (hints.Count == 0 || num > 0) {
             hints.Add(new Hint(num, false)); //bookends with last element, also covers 0 case
-            debug = debug + ", " + num;
         }
-        Debug.Log(debug);
         return hints;
     }
 
