@@ -129,3 +129,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aa08af18bff9f34f958e79ada50d56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hintTextPrefab: {fileID: 0}
+  hintLineSprite: {fileID: 0}

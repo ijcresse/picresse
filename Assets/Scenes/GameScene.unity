@@ -130,6 +130,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1589082265}
     m_Modifications:
+    - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.49803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7411765
+      objectReference: {fileID: 0}
     - target: {fileID: 3692159200809077592, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_Name
       value: Grid
@@ -276,6 +288,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1589082265}
     m_Modifications:
+    - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
+      propertyPath: m_Color.b
+      value: 0.49803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7294118
+      objectReference: {fileID: 0}
+    - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8235294
+      objectReference: {fileID: 0}
     - target: {fileID: 4651316362717853436, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -463,8 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1ca3b3470cb3e4f94e3ef8bb268deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameDimensionX: 2
-  gameDimensionY: 2
+  gameDimensionX: 10
+  gameDimensionY: 10
   clock: {fileID: 4651316362717853437, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
   hintCols: {fileID: 7119479243941571650, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
   hintRows: {fileID: 751176033660996516, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
@@ -543,7 +567,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
+  m_Color: {r: 1, g: 0.7137255, b: 0.75686276, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -745,6 +769,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 609819271}
     m_Modifications:
+    - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
+      propertyPath: m_Color.b
+      value: 0.49803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7294118
+      objectReference: {fileID: 0}
+    - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8235294
+      objectReference: {fileID: 0}
     - target: {fileID: 7119479243941571650, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
       propertyPath: m_Name
       value: HintCols
@@ -849,6 +885,18 @@ PrefabInstance:
     - target: {fileID: 751176033660996517, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: m_Color.b
+      value: 0.49803922
+      objectReference: {fileID: 0}
+    - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7294118
+      objectReference: {fileID: 0}
+    - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8235294
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}

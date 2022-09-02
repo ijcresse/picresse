@@ -62,15 +62,12 @@ public class HintLine : MonoBehaviour
         if (isCol && column == position) {
             active = true;
             color.a = 100;
-            Debug.Log($"HintLine: OnActivated. activating column {column}. color.a {color.a}");
         } else if (!isCol && row == position) {
             active = true;
             color.a = 100;
-            Debug.Log($"HintLine: OnActivated. activating row {row}. color.a {color.a}");
         } else {
             active = false;
             color.a = 0;
-            Debug.Log($"HintLine: OnActivated. deactivating. color.a {color.a}");
         }
 
         if (hintLineSprite.color.a != color.a) { //update only when we detect an update!

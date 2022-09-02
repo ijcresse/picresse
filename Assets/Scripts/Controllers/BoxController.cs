@@ -28,6 +28,5 @@ public class BoxController : MonoBehaviour
         }
         spriteRenderer.sprite = spriteArray[state];
         this.state = state;
-        Debug.Log($"Box.SetState: setting state to {state}");
     }
 }
