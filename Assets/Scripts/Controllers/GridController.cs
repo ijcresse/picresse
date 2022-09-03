@@ -63,6 +63,7 @@ public class GridController : MonoBehaviour
             for (int j = 0; j < gameDimensionX; j++) {
                 Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
+                box.transform.SetParent(gameObject.transform, false);
                 double temp = boxSize * 1.9;
                 box.transform.localScale = new Vector2((float) temp, (float) temp);
                 grid[j, i] = box;

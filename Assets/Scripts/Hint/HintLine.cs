@@ -22,7 +22,14 @@ public class HintLine : MonoBehaviour
         this.solved = false;
         
         hintText = Instantiate(hintTextPrefab, new Vector2(0f, 0f), hintTextPrefab.transform.rotation).GetComponent<TextMeshProUGUI>();
-        hintText.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        if (isCol)
+        {
+            hintText.transform.SetParent(GameObject.Find("HintColsUI").transform, false);
+        } else
+        {
+            hintText.transform.SetParent(GameObject.Find("HintRowsUI").transform, false);
+        }
+        
         
         string text = "";
         for(int i = 0; i < hints.Count ; i++) {
@@ -33,7 +40,7 @@ public class HintLine : MonoBehaviour
             }
         }
         hintText.text = text;
-
+        /*
         float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
         Vector3 gamePos = isCol ?
                             new Vector3(gameObject.transform.position.x + (boxSize / 2), gameObject.transform.position.y, 0f) :
@@ -41,6 +48,7 @@ public class HintLine : MonoBehaviour
         Vector3 screenPos = Camera.main.WorldToScreenPoint(gamePos);
         Vector3 adjustedPos = new Vector3 (screenPos.x - (Screen.width / 2), screenPos.y - (Screen.height / 2), 0f);
         hintText.GetComponent<RectTransform>().anchoredPosition3D = adjustedPos;
+        */
         EventSystem.current.onCursorMovedTo += OnActivated;
 
         hintLineSprite = gameObject.GetComponent<SpriteRenderer>();
