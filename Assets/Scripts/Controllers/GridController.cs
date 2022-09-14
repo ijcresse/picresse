@@ -54,6 +54,7 @@ public class GridController : MonoBehaviour
 
     public void SetUpGrid() {
         boxSize = gridSpriteSize.y / gameDimensionY; //always compare one direction to get a square. also, y is generally smaller (25 x 20)
+                                                     //later... fix this so it compares the smallest size, so we can better support variable sizes
         DebugLog($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
         startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2, 
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
@@ -64,7 +65,8 @@ public class GridController : MonoBehaviour
                 Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
                 box.transform.SetParent(gameObject.transform, false);
-                double temp = boxSize * 1.9;
+                //TODO: better name pls
+                double temp = boxSize * 2;
                 box.transform.localScale = new Vector2((float) temp, (float) temp);
                 grid[j, i] = box;
             }

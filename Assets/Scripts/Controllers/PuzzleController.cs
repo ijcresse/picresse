@@ -158,23 +158,25 @@ public class PuzzleController : MonoBehaviour
         // }
 
         /*
-        hintPtr, gridPtr = 0;
-        spaceReq, error = false;
-        hintCounter = 0;
-        while (!error && gridPtr < grid.length)
-            state = grid[gridPtr]
-            if (state != active) {
-                spaceReq = false
+        int hintPtr = 0;
+        int gridPtr = 0;
+        bool spaceReq = false;
+        bool error = false;
+        int hintCounter = 0;
+        while (!error && gridPtr < grid.Length) {
+            int state = grid[gridPtr];
+            if (state != 1) { //active
+                spaceReq = false;
                 if (hintCounter > 0) {
                     error = true;
                 }
-            } else if (state == active) {
+            } else if (state == 1) {
                 if (hintCounter == 0) {
-                    hintCounter = hints[hintPtr] //safe check, check for hintCounter != 0)
+                    hintCounter = hint[hintPtr]; //safe check, check for hintCounter != 0)
                     hintPtr++;
                 }
                 hintCounter--;
-                if hintCounter < 0 {
+                if (spaceReq && hintCounter < 0) {
                     error = true;
                 }
                 if (hintCounter == 0) {
@@ -182,6 +184,7 @@ public class PuzzleController : MonoBehaviour
                 }
             }
             gridPtr++;
+        }
         */
     }
 
