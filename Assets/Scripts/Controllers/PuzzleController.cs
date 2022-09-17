@@ -119,11 +119,33 @@ public class PuzzleController : MonoBehaviour
 
     private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
     {
-        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: new state: {stateUpdate} for {col}, {row}");
-        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: col list size: {colThenRow[0].Count} row list size: {colThenRow[1].Count}");
         bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
         bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]);
-        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: colSolved {colSolved}, rowSolved {rowSolved}");
+        //Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: col {col} solved: {colSolved}, row {row} solved: {rowSolved}");
+        CheckSolved();
+    }
+
+    private void CheckSolved()
+    {
+        bool solved = true;
+        for (int i = 0; i < hintColumns.Count; i++)
+        {
+            if (!hintColumns[i].solved)
+            {
+                solved = false;
+            }
+        }
+        for (int i = 0; i < hintRows.Count; i++)
+        {
+            if (!hintRows[i].solved)
+            {
+                solved = false;
+            }
+        }
+        if (solved)
+        {
+            Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
+        }
     }
 
     private void OnDestroy()

@@ -59,6 +59,7 @@ public class HintLine : MonoBehaviour
 
     //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
     public bool CalculateSolved(List<int> gridLine) {
+        solved = false;
         int gridPtr = 0;
         for (int i = 0; i < hints.Count; i++)
         {
@@ -86,7 +87,6 @@ public class HintLine : MonoBehaviour
 
             if (gridPtr < gridLine.Count && i < hints.Count - 1)
             {
-                gridPtr++;
                 if (gridLine[gridPtr] == Constants.ACTIVE)
                 {
                     return false;
@@ -98,6 +98,7 @@ public class HintLine : MonoBehaviour
         }
 
         //hints all solved. go through and make sure there are no additional active boxes.
+        gridPtr++;
         for (; gridPtr < gridLine.Count; gridPtr++)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE)
@@ -105,7 +106,7 @@ public class HintLine : MonoBehaviour
                 return false;
             }
         }
-        Debug.Log($"DEBUG HintLine.CalculateSolved: isCol {isCol}, position {position} is now solved. ");
+        solved = true;
         return true;
     }
 
