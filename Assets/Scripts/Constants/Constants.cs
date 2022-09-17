@@ -4,8 +4,8 @@ using UnityEngine;
 
 class Constants
 {
-    public const int ACTIVE = 0;
-    public const int INACTIVE = 1;
+    public const int INACTIVE = 0;
+    public const int ACTIVE = 1;
     public const int CROSSED = 2;
     public const int SORTING_LAYER_DEFAULT = 0;
     public const int SORTING_LAYER_BACKGROUNDS = 1;

@@ -7,6 +7,7 @@ public class EventSystem : MonoBehaviour
 {
     public static EventSystem current;
     public event Action<int, int> onCursorMovedTo;
+    public event Action<int, int, int, List<List<int>>> onBoxUpdated;
 
     private void Awake()
     {
@@ -18,6 +19,17 @@ public class EventSystem : MonoBehaviour
             onCursorMovedTo(column, row);
         } else {
             Debug.Log("ERROR EventSystem.CursorMovedTo: no registered listeners");
+        }
+    }
+
+    public void BoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
+    {
+        if (onBoxUpdated != null)
+        {
+            onBoxUpdated(stateUpdate, col, row, colThenRow);
+        } else
+        {
+            Debug.Log("ERROR EventSystem.BoxUpdated: no registered listeners");
         }
     }
 }

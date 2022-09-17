@@ -7,14 +7,11 @@ public class BoxController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Sprite[] spriteArray = new Sprite[2];
     private int state;
-    private const int INACTIVE = 0;
-    private const int ACTIVE = 1;
-    private const int CROSSED = 2;
 
     void Start()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        state = INACTIVE;
+        state = Constants.INACTIVE;
     }
 
     public int GetState() {
@@ -22,7 +19,7 @@ public class BoxController : MonoBehaviour
     }
 
     public void SetState(int state) {
-        if (state < INACTIVE || state > CROSSED) {
+        if (state < Constants.INACTIVE || state > Constants.CROSSED) {
             Debug.Log($"BoxController.SetState(): Invalid state attempted: {state}");
             return;
         }

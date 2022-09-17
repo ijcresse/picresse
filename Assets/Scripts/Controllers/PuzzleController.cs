@@ -14,6 +14,7 @@ public class PuzzleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
     public void CreatePuzzle(int x, int y) {
@@ -85,7 +86,16 @@ public class PuzzleController : MonoBehaviour
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
         }
-        hintLine.GetComponent<HintLine>().Init(hints, isCol, position, position == 0);
+        HintLine line = hintLine.GetComponent<HintLine>();
+        line.Init(hints, isCol, position, position == 0);
+        if (isCol)
+        {
+            hintColumns.Add(line);
+        }
+        else
+        {
+            hintRows.Add(line);
+        }
     }
 
     List<Hint> GetHints(List<bool> puzzleLine) {
@@ -107,7 +117,23 @@ public class PuzzleController : MonoBehaviour
         return hints;
     }
 
-    public void CheckSolved(int[] grid, int row = -1, int col = -1) {
+    private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
+    {
+        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: new state: {stateUpdate} for {col}, {row}");
+        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: col list size: {colThenRow[0].Count} row list size: {colThenRow[1].Count}");
+        bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
+        bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]);
+        Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: colSolved {colSolved}, rowSolved {rowSolved}");
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onBoxUpdated -= OnBoxUpdated;
+    }
+
+
+    public void CheckSolved(int[] grid, int row = -1, int col = -1)
+    {
         // if (row != -1 && col != -1) {
         //     Debug.Log("ERROR PuzzleController.CheckSolved specifies both column and row");
         //     return;
@@ -185,17 +211,6 @@ public class PuzzleController : MonoBehaviour
             }
             gridPtr++;
         }
-        */
-    }
-
-    public void CheckHints(int row, int col) {
-        /*
-        aPtr, bPtr, bRunner
-        captureStart = B[0] == active
-        while (bPtr < B.length)
-            if captureStart
-                bRunner = bPtr
-                while
         */
     }
 }

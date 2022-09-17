@@ -57,20 +57,23 @@ public class HintLine : MonoBehaviour
         hintLineSprite.color = color;
     }
 
-    private bool CalculateSolved(List<int> gridLine) {
+    //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
+    public bool CalculateSolved(List<int> gridLine) {
         int gridPtr = 0;
         for (int i = 0; i < hints.Count; i++)
         {
             Hint currentHint = hints[i];
             
             //find first new instance of active
-            while (gridPtr < gridLine.Count || gridLine[gridPtr] != Constants.ACTIVE)
+
+            //ok, this is going out of rangeof gridLine. also it's not stopping on the first instance. whoops! figure out the boolean condition to exit out properly!
+            while (gridPtr < gridLine.Count && gridLine[gridPtr] != Constants.ACTIVE)
             {
                 gridPtr++;
             }
 
             //check to make sure hint is contiguously solved
-            for (int j = 0; j < currentHint.num; i++)
+            for (int j = 0; j < currentHint.num; j++)
             {
                 if (gridPtr >= gridLine.Count || gridLine[gridPtr] != Constants.ACTIVE)
                 {
@@ -79,15 +82,30 @@ public class HintLine : MonoBehaviour
                 }
                 gridPtr++;
             }
-
-            //hint is solved, let's check it as solved! and then check to make sure we account for the required additional space.
             currentHint.solved = true;
-            gridPtr++;
-            if (gridPtr >= gridLine.Count || gridLine[gridPtr] == Constants.ACTIVE)
+
+            if (gridPtr < gridLine.Count && i < hints.Count - 1)
+            {
+                gridPtr++;
+                if (gridLine[gridPtr] == Constants.ACTIVE)
+                {
+                    return false;
+                }
+            } else if (gridPtr >= gridLine.Count && i < hints.Count - 1)
             {
                 return false;
             }
         }
+
+        //hints all solved. go through and make sure there are no additional active boxes.
+        for (; gridPtr < gridLine.Count; gridPtr++)
+        {
+            if (gridLine[gridPtr] == Constants.ACTIVE)
+            {
+                return false;
+            }
+        }
+        Debug.Log($"DEBUG HintLine.CalculateSolved: isCol {isCol}, position {position} is now solved. ");
         return true;
     }
 
