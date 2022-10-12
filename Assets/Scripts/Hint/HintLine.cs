@@ -29,26 +29,9 @@ public class HintLine : MonoBehaviour
         {
             hintText.transform.SetParent(GameObject.Find("HintRowsUI").transform, false);
         }
-        
-        
-        string text = "";
-        for(int i = 0; i < hints.Count ; i++) {
-            if (isCol) {
-                text = text + hints[i].num + "\n";
-            } else {
-                text = text + " " + hints[i].num;
-            }
-        }
-        hintText.text = text;
-        /*
-        float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
-        Vector3 gamePos = isCol ?
-                            new Vector3(gameObject.transform.position.x + (boxSize / 2), gameObject.transform.position.y, 0f) :
-                            new Vector3(gameObject.transform.position.x - (boxSize / 2), gameObject.transform.position.y + (boxSize / 2), 0f);
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(gamePos);
-        Vector3 adjustedPos = new Vector3 (screenPos.x - (Screen.width / 2), screenPos.y - (Screen.height / 2), 0f);
-        hintText.GetComponent<RectTransform>().anchoredPosition3D = adjustedPos;
-        */
+
+        SetText();
+
         EventSystem.current.onCursorMovedTo += OnActivated;
 
         hintLineSprite = gameObject.GetComponent<SpriteRenderer>();
@@ -66,8 +49,6 @@ public class HintLine : MonoBehaviour
             Hint currentHint = hints[i];
             
             //find first new instance of active
-
-            //ok, this is going out of rangeof gridLine. also it's not stopping on the first instance. whoops! figure out the boolean condition to exit out properly!
             while (gridPtr < gridLine.Count && gridLine[gridPtr] != Constants.ACTIVE)
             {
                 gridPtr++;
@@ -110,8 +91,113 @@ public class HintLine : MonoBehaviour
         return true;
     }
 
-    private void SetText() {
-        
+    public void CheckCaptures(List<int> gridLine)
+    {
+        ClearHints();
+        int gridPtr = 0;
+        bool capturing = true; //wall counts as capturer //still not finding the wall capture unfortuantely!
+        int captureCount = 0;
+        bool captureFound = false;
+        while(gridPtr < gridLine.Count)
+        {
+            if (gridLine[gridPtr] == Constants.ACTIVE && capturing)
+            {
+                captureCount++;
+            }
+            if (gridLine[gridPtr] == Constants.INACTIVE && capturing)
+            {
+                captureCount = 0;
+                capturing = false;
+            }
+            if (gridLine[gridPtr] == Constants.CROSSED || gridPtr == gridLine.Count - 1) //latter accounts for end wall
+            {
+                if (capturing) //end current capture
+                {
+                    Dictionary<int, List<int>> hintsInRange = FindValidHintsInRange(gridPtr);
+                    if (hintsInRange.ContainsKey(captureCount))
+                    {
+                        if (hintsInRange[captureCount].Count == 1) //unique value found, can secure capture
+                        {
+                            int capturedHintPosition = hintsInRange[captureCount][0];
+                            hints[capturedHintPosition].solved = true;
+                            captureFound = true;
+                        }
+                    } else
+                    {
+                        //this capture doesn't match any valid hints, we're in error
+                    }
+                } else
+                {
+                    capturing = true;
+                    captureCount = 0;
+                }
+            }
+            gridPtr++;
+        }
+
+        if (captureFound)
+        {
+            SetText();
+        }
+    }
+
+    private void ClearHints()
+    {
+        for (int i = 0; i < hints.Count; i++)
+        {
+            hints[i].solved = false;
+        }
+    }
+
+    private Dictionary<int, List<int>> FindValidHintsInRange(int position)
+    {
+        Dictionary<int, List<int>> hintsInRange = new Dictionary<int, List<int>>();
+        int cumulativeHintValue = 0;
+        for (int i = 0; i < hints.Count; i++)
+        {
+            cumulativeHintValue += hints[i].num;
+            if (position >= cumulativeHintValue + i) //value of i is number of spaces required
+            {
+                if (hintsInRange.ContainsKey(hints[i].num))
+                {
+                    hintsInRange[hints[i].num].Add(i); //storing position
+                } else
+                {
+                    hintsInRange[hints[i].num] = new List<int> { i }; 
+                }
+            }
+        }
+        return hintsInRange;
+    }
+
+    private void SetText() { //TODO: this is buggy. only fills one star, doesn't clear stars. fix it!!!
+        string text = "";
+        for (int i = 0; i < hints.Count; i++)
+        {
+            if (isCol)
+            {
+                if (hints[i].solved)
+                {
+                    Debug.Log("hint solved, marking");
+                    text = text + "*" + hints[i].num + "\n"; ;
+                } else
+                {
+                    text = text + hints[i].num + "\n";
+                }
+            }
+            else
+            {
+                if (hints[i].solved)
+                {
+                    Debug.Log("hint solved, marking");
+                    text = text + "*" + hints[i].num;
+                } else
+                {
+                    text = text + " " + hints[i].num;
+                }
+            }
+        }
+        hintText.text = text;
     }
 
     private void OnActivated(int column, int row) { //ok one, we're having a problem with how the system adds/removes too much alpha. two, it says it's deactivating, but it's not?

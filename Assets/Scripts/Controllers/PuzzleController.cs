@@ -120,12 +120,18 @@ public class PuzzleController : MonoBehaviour
     private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
     {
         bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
-        bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]);
-        //Debug.Log($"DEBUG PuzzleController.OnBoxUpdated: col {col} solved: {colSolved}, row {row} solved: {rowSolved}");
-        CheckSolved();
+        bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]); //rename this dumb var
+        if (CheckSolved())
+        {
+            Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
+        } else
+        {
+            hintColumns[col].CheckCaptures(colThenRow[1]);
+            hintRows[row].CheckCaptures(colThenRow[0]);
+        }
     }
 
-    private void CheckSolved()
+    private bool CheckSolved()
     {
         bool solved = true;
         for (int i = 0; i < hintColumns.Count; i++)
@@ -142,10 +148,7 @@ public class PuzzleController : MonoBehaviour
                 solved = false;
             }
         }
-        if (solved)
-        {
-            Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
-        }
+        return solved;
     }
 
     private void OnDestroy()
