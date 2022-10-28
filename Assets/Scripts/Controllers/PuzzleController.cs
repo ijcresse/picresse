@@ -61,6 +61,7 @@ public class PuzzleController : MonoBehaviour
             List<bool> row = GetRow(y);
             CreateHintLine(GetHints(row), false, y);
         }
+        CheckSolved();
     }
 
     private void CreateHintLine(List<Hint> hints, bool isCol, int position) {
@@ -119,16 +120,17 @@ public class PuzzleController : MonoBehaviour
 
     private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
     {
-        bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
-        bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]); //rename this dumb var
+        //bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
+        //bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]); //rename this dumb var
+        hintColumns[col].solved = hintColumns[col].CalculateSolved(colThenRow[1]);
+        hintRows[row].solved = hintRows[row].CalculateSolved(colThenRow[0]);
+        
         if (CheckSolved())
         {
             Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
-        } else
-        {
-            hintColumns[col].CheckCaptures(colThenRow[1]);
-            hintRows[row].CheckCaptures(colThenRow[0]);
         }
+        hintColumns[col].CheckCaptures(colThenRow[1]);
+        hintRows[row].CheckCaptures(colThenRow[0]);
     }
 
     private bool CheckSolved()
@@ -154,88 +156,5 @@ public class PuzzleController : MonoBehaviour
     private void OnDestroy()
     {
         EventSystem.current.onBoxUpdated -= OnBoxUpdated;
-    }
-
-
-    public void CheckSolved(int[] grid, int row = -1, int col = -1)
-    {
-        // if (row != -1 && col != -1) {
-        //     Debug.Log("ERROR PuzzleController.CheckSolved specifies both column and row");
-        //     return;
-        // } else if ((row < 0 && row > hints.GetLength(1)) || (col < 0 && col > hints.GetLength(0))) {
-        //     Debug.Log($"ERROR PuzzleController.CheckSolved has illegal column ({col}) or row ({row}) length");
-        // }
-
-        // if (grid.Length < 0) {
-        //     Debug.Log($"ERROR PuzzleController.CheckSolved grid parameter is invalid with length {grid.Length}");
-        // }
-
-        // bool[] hintArr;
-        // if (col == -1) {
-        //     hintArr = GetRow(row);
-        // } else if (row == -1) {
-        //     hintArr = GetCol(col);
-        // } else {
-        //     Debug.Log("ERROR PuzzleController.CheckSolved specifies neither column nor row");
-        //     return;
-        // }
-
-        // int hintPtr = 0;
-        // int gridPtr = 0;
-        // int hintCounter = 0;
-        // bool spaceReq = false;
-        // bool error = false;
-        // while (!error && gridPtr < grid.Length) {
-        //     bool state = grid[gridPtr]; //state should be active / inactive / crossed
-        //     if (state) {
-        //         spaceReq = false;
-        //         if (hintCounter > 0) {
-        //             error = true;
-        //         }
-        //     } else {
-        //         if (hintCounter == 0) {
-        //             // hintCounter = hintArr[hintPtr]; //"safe check, check for hintCounter != 0 // huh? hintCounter is guaranteed to be 0 before this...
-        //             hintPtr++;
-        //         }
-        //         hintCounter--;
-        //         if (hintCounter < 0) {
-        //             error = true;
-        //         }
-        //         if (hintCounter == 0) {
-        //             spaceReq = true;
-        //         }
-        //     }
-        //     gridPtr++;
-        // }
-
-        /*
-        int hintPtr = 0;
-        int gridPtr = 0;
-        bool spaceReq = false;
-        bool error = false;
-        int hintCounter = 0;
-        while (!error && gridPtr < grid.Length) {
-            int state = grid[gridPtr];
-            if (state != 1) { //active
-                spaceReq = false;
-                if (hintCounter > 0) {
-                    error = true;
-                }
-            } else if (state == 1) {
-                if (hintCounter == 0) {
-                    hintCounter = hint[hintPtr]; //safe check, check for hintCounter != 0)
-                    hintPtr++;
-                }
-                hintCounter--;
-                if (spaceReq && hintCounter < 0) {
-                    error = true;
-                }
-                if (hintCounter == 0) {
-                    spaceReq = true;
-                }
-            }
-            gridPtr++;
-        }
-        */
     }
 }

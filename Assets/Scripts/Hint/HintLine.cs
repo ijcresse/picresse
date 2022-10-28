@@ -8,7 +8,7 @@ public class HintLine : MonoBehaviour
     public List<Hint> hints {get; private set;}
     bool isCol;
     bool active {get; set;} //true when cursor is on this line
-    public bool solved {get; private set;}
+    public bool solved {get; set;}
     int position; //leftmost/topmost is 0
     public GameObject hintTextPrefab;
     private TextMeshProUGUI hintText;
@@ -19,7 +19,7 @@ public class HintLine : MonoBehaviour
         this.isCol = isCol;
         this.position = position;
         this.active = active;
-        this.solved = false;
+        this.solved = hints[0].num == 0; //if hint is 0, no more hints should exist.
         
         hintText = Instantiate(hintTextPrefab, new Vector2(0f, 0f), hintTextPrefab.transform.rotation).GetComponent<TextMeshProUGUI>();
         if (isCol)
@@ -42,7 +42,6 @@ public class HintLine : MonoBehaviour
 
     //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
     public bool CalculateSolved(List<int> gridLine) {
-        solved = false;
         int gridPtr = 0;
         for (int i = 0; i < hints.Count; i++)
         {
@@ -87,7 +86,6 @@ public class HintLine : MonoBehaviour
                 return false;
             }
         }
-        solved = true;
         return true;
     }
 
@@ -97,21 +95,37 @@ public class HintLine : MonoBehaviour
         int gridPtr = 0;
         bool capturing = true; //wall counts as capturer //still not finding the wall capture unfortuantely!
         int captureCount = 0;
-        bool captureFound = false;
         while(gridPtr < gridLine.Count)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE && capturing)
             {
                 captureCount++;
-            }
-            if (gridLine[gridPtr] == Constants.INACTIVE && capturing)
+                if (gridPtr == gridLine.Count - 1) //activated something at the wall, check for capture!
+                {
+                    capturing = false;
+                    Dictionary<int, List<int>> hintsInRange = FindValidHintsInRange(gridPtr);
+                    if (hintsInRange.ContainsKey(captureCount))
+                    {
+                        if (hintsInRange[captureCount].Count == 1) //unique value found, can secure capture
+                        {
+                            int capturedHintPosition = hintsInRange[captureCount][0];
+                            hints[capturedHintPosition].solved = true;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log(hintsInRange.ContainsKey(captureCount));
+                        Debug.Log("HintLine.CheckCaptures: capture of size " + captureCount + " doesn't match any valid hints: " + position);
+                        //this capture doesn't match any valid hints, we're in error
+                    }
+                }
+            } else if (gridLine[gridPtr] == Constants.INACTIVE && capturing)
             {
                 captureCount = 0;
                 capturing = false;
-            }
-            if (gridLine[gridPtr] == Constants.CROSSED || gridPtr == gridLine.Count - 1) //latter accounts for end wall
+            } else if (gridLine[gridPtr] == Constants.CROSSED || gridPtr == gridLine.Count - 1) //latter accounts for end wall
             {
-                if (capturing) //end current capture
+                if (capturing) //end current capture OK NOT NECESSARILY. crossed against wall is still valid. if we have a cross, we're starting a capture one way or another.
                 {
                     Dictionary<int, List<int>> hintsInRange = FindValidHintsInRange(gridPtr);
                     if (hintsInRange.ContainsKey(captureCount))
@@ -120,25 +134,22 @@ public class HintLine : MonoBehaviour
                         {
                             int capturedHintPosition = hintsInRange[captureCount][0];
                             hints[capturedHintPosition].solved = true;
-                            captureFound = true;
                         }
                     } else
                     {
+                        Debug.Log(hintsInRange.ContainsKey(captureCount));
+                        Debug.Log("HintLine.CheckCaptures: capture of size " + captureCount + " doesn't match any valid hints: " + position);
                         //this capture doesn't match any valid hints, we're in error
                     }
                 } else
                 {
                     capturing = true;
-                    captureCount = 0;
                 }
+                captureCount = 0;
             }
             gridPtr++;
         }
-
-        if (captureFound)
-        {
-            SetText();
-        }
+        SetText();
     }
 
     private void ClearHints()
@@ -148,15 +159,17 @@ public class HintLine : MonoBehaviour
             hints[i].solved = false;
         }
     }
-
+     
     private Dictionary<int, List<int>> FindValidHintsInRange(int position)
     {
         Dictionary<int, List<int>> hintsInRange = new Dictionary<int, List<int>>();
         int cumulativeHintValue = 0;
         for (int i = 0; i < hints.Count; i++)
         {
+            Debug.Log(hints[i].num);
             cumulativeHintValue += hints[i].num;
-            if (position >= cumulativeHintValue + i) //value of i is number of spaces required
+            if (position >= cumulativeHintValue + i) //value of i is number of spaces required NO. this needs to be the proper range.
+                //add up all previous hints, that's start. add up all latter hints and subtract off wall, that's the end.
             {
                 if (hintsInRange.ContainsKey(hints[i].num))
                 {
@@ -176,23 +189,27 @@ public class HintLine : MonoBehaviour
         {
             if (isCol)
             {
-                if (hints[i].solved)
+                Debug.Log(position + " col hint state: " + hints[i].solved);
+                if (solved || hints[i].solved)
                 {
-                    Debug.Log("hint solved, marking");
-                    text = text + "*" + hints[i].num + "\n"; ;
+                    Debug.Log(position + " col hint solved");
+                    text = text + "<color=black>" + hints[i].num + "</color>" + "\n";
                 } else
                 {
+                    Debug.Log(position + "col hint not solved");
                     text = text + hints[i].num + "\n";
                 }
             }
             else
             {
-                if (hints[i].solved)
+                Debug.Log(position + " row state: " + hints[i].solved);
+                if (solved || hints[i].solved)
                 {
-                    Debug.Log("hint solved, marking");
-                    text = text + "*" + hints[i].num;
+                    Debug.Log(position + " row hint solved");
+                    text = text + "<color=black>" + hints[i].num + "</color>";
                 } else
                 {
+                    Debug.Log(position + " row hint not solved");
                     text = text + " " + hints[i].num;
                 }
             }
