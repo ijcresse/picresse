@@ -14,8 +14,9 @@ public class HintLine : MonoBehaviour
     private TextMeshProUGUI hintText;
     public SpriteRenderer hintLineSprite;
 
-    public void Init(List<Hint> hints, bool isCol, int position, bool active) {
+    public void Init(List<Hint> hints, bool isCol, int position, bool active, int lineSize) {
         this.hints = hints;
+        CreateHintRanges(lineSize);
         this.isCol = isCol;
         this.position = position;
         this.active = active;
@@ -38,6 +39,22 @@ public class HintLine : MonoBehaviour
         Color color = hintLineSprite.color;
         color.a = active ? 100 : 0;
         hintLineSprite.color = color;
+    }
+
+    private void CreateHintRanges(int size)
+    {
+        int earliestPos = 0;
+        for (int i = 0; i < hints.Count; i++)
+        {
+            hints[i].earliestPosition = earliestPos;
+            earliestPos += hints[i].num + 1;
+        }
+        int latestPos = size - 1; //adjust for 0 based index
+        for (int i = hints.Count - 1; i >= 0; i--)
+        {
+            hints[i].latestPosition = latestPos;
+            latestPos -= (hints[i].num + 1);
+        }
     }
 
     //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
@@ -102,22 +119,7 @@ public class HintLine : MonoBehaviour
                 captureCount++;
                 if (gridPtr == gridLine.Count - 1) //activated something at the wall, check for capture!
                 {
-                    capturing = false;
-                    Dictionary<int, List<int>> hintsInRange = FindValidHintsInRange(gridPtr);
-                    if (hintsInRange.ContainsKey(captureCount))
-                    {
-                        if (hintsInRange[captureCount].Count == 1) //unique value found, can secure capture
-                        {
-                            int capturedHintPosition = hintsInRange[captureCount][0];
-                            hints[capturedHintPosition].solved = true;
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log(hintsInRange.ContainsKey(captureCount));
-                        Debug.Log("HintLine.CheckCaptures: capture of size " + captureCount + " doesn't match any valid hints: " + position);
-                        //this capture doesn't match any valid hints, we're in error
-                    }
+                    FindValidHintInRange(gridPtr, captureCount);
                 }
             } else if (gridLine[gridPtr] == Constants.INACTIVE && capturing)
             {
@@ -125,22 +127,10 @@ public class HintLine : MonoBehaviour
                 capturing = false;
             } else if (gridLine[gridPtr] == Constants.CROSSED || gridPtr == gridLine.Count - 1) //latter accounts for end wall
             {
-                if (capturing) //end current capture OK NOT NECESSARILY. crossed against wall is still valid. if we have a cross, we're starting a capture one way or another.
+                if (capturing)
                 {
-                    Dictionary<int, List<int>> hintsInRange = FindValidHintsInRange(gridPtr);
-                    if (hintsInRange.ContainsKey(captureCount))
-                    {
-                        if (hintsInRange[captureCount].Count == 1) //unique value found, can secure capture
-                        {
-                            int capturedHintPosition = hintsInRange[captureCount][0];
-                            hints[capturedHintPosition].solved = true;
-                        }
-                    } else
-                    {
-                        Debug.Log(hintsInRange.ContainsKey(captureCount));
-                        Debug.Log("HintLine.CheckCaptures: capture of size " + captureCount + " doesn't match any valid hints: " + position);
-                        //this capture doesn't match any valid hints, we're in error
-                    }
+                    int adjustedPos = gridPtr == gridLine.Count - 1 ? gridPtr : gridPtr - 1; //check one step back from cross
+                    FindValidHintInRange(adjustedPos, captureCount);
                 } else
                 {
                     capturing = true;
@@ -159,28 +149,27 @@ public class HintLine : MonoBehaviour
             hints[i].solved = false;
         }
     }
-     
-    private Dictionary<int, List<int>> FindValidHintsInRange(int position)
+    private void FindValidHintInRange(int gridPtr, int captureCount)
     {
-        Dictionary<int, List<int>> hintsInRange = new Dictionary<int, List<int>>();
-        int cumulativeHintValue = 0;
+        int match = -1;
         for (int i = 0; i < hints.Count; i++)
         {
-            Debug.Log(hints[i].num);
-            cumulativeHintValue += hints[i].num;
-            if (position >= cumulativeHintValue + i) //value of i is number of spaces required NO. this needs to be the proper range.
-                //add up all previous hints, that's start. add up all latter hints and subtract off wall, that's the end.
+            if (hints[i].earliestPosition <= gridPtr && gridPtr <= hints[i].latestPosition &&
+                hints[i].num == captureCount && !hints[i].solved)
             {
-                if (hintsInRange.ContainsKey(hints[i].num))
+                if (match != -1)
                 {
-                    hintsInRange[hints[i].num].Add(i); //storing position
+                    return;
                 } else
                 {
-                    hintsInRange[hints[i].num] = new List<int> { i }; 
+                    match = i;
                 }
             }
         }
-        return hintsInRange;
+        if (match != -1) //in case no match was found
+        {
+            hints[match].solved = true;
+        }
     }
 
     private void SetText() { //TODO: this is buggy. only fills one star, doesn't clear stars. fix it!!!

@@ -35,7 +35,7 @@ public class PuzzleController : MonoBehaviour
     }
 
     List<bool> GetCol(int col) {
-        List<bool> puzzleCol = new List<bool>();
+        List<bool> puzzleCol = new();
         for (int i = 0; i < puzzle.Count; i++) {
             puzzleCol.Add(puzzle[i][col]);
         }
@@ -43,7 +43,7 @@ public class PuzzleController : MonoBehaviour
     }
 
     List<bool> GetRow(int row) {
-        List<bool> puzzleRow = new List<bool>();
+        List<bool> puzzleRow = new();
         for (int i = 0; i < puzzle[row].Count; i++) {
             puzzleRow.Add(puzzle[row][i]);
         }
@@ -74,21 +74,24 @@ public class PuzzleController : MonoBehaviour
 
         Vector2 updatedPosition;
         Vector2 updatedScale;
+        int lineSize = 0;
         if (isCol) {
             updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2), 
                                           hintBG.transform.position.y);
             updatedScale = new Vector2(boxSize, hintBG.transform.localScale.y);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
+            lineSize = puzzle.Count;
         } else {
             updatedPosition = new Vector2(hintBG.transform.position.x, 
                                           hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
             updatedScale = new Vector2(hintBG.transform.localScale.x, boxSize);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
+            lineSize = puzzle[0].Count;
         }
         HintLine line = hintLine.GetComponent<HintLine>();
-        line.Init(hints, isCol, position, position == 0);
+        line.Init(hints, isCol, position, position == 0, lineSize);
         if (isCol)
         {
             hintColumns.Add(line);
