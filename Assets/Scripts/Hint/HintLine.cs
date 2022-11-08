@@ -57,7 +57,6 @@ public class HintLine : MonoBehaviour
         }
     }
 
-    //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
     public bool CalculateSolved(List<int> gridLine) {
         int gridPtr = 0;
         for (int i = 0; i < hints.Count; i++)
@@ -71,6 +70,7 @@ public class HintLine : MonoBehaviour
             }
 
             //check to make sure hint is contiguously solved
+            //TODO: this breaks on hint{1}, size 2 if both boxes are filled. adjust gridPtr appropriately.
             for (int j = 0; j < currentHint.num; j++)
             {
                 if (gridPtr >= gridLine.Count || gridLine[gridPtr] != Constants.ACTIVE)
@@ -82,12 +82,10 @@ public class HintLine : MonoBehaviour
             }
             currentHint.solved = true;
 
-            if (gridPtr < gridLine.Count && i < hints.Count - 1)
+            //check for one active too many
+            if (gridPtr < gridLine.Count && i < hints.Count - 1 && gridLine[gridPtr] == Constants.ACTIVE)
             {
-                if (gridLine[gridPtr] == Constants.ACTIVE)
-                {
-                    return false;
-                }
+                return false;
             } else if (gridPtr >= gridLine.Count && i < hints.Count - 1)
             {
                 return false;
@@ -95,7 +93,6 @@ public class HintLine : MonoBehaviour
         }
 
         //hints all solved. go through and make sure there are no additional active boxes.
-        gridPtr++;
         for (; gridPtr < gridLine.Count; gridPtr++)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE)
@@ -110,14 +107,14 @@ public class HintLine : MonoBehaviour
     {
         ClearHints();
         int gridPtr = 0;
-        bool capturing = true; //wall counts as capturer //still not finding the wall capture unfortuantely!
+        bool capturing = true;
         int captureCount = 0;
         while(gridPtr < gridLine.Count)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE && capturing)
             {
                 captureCount++;
-                if (gridPtr == gridLine.Count - 1) //activated something at the wall, check for capture!
+                if (gridPtr == gridLine.Count - 1) //wall check
                 {
                     FindValidHintInRange(gridPtr, captureCount);
                 }
@@ -172,33 +169,27 @@ public class HintLine : MonoBehaviour
         }
     }
 
-    private void SetText() { //TODO: this is buggy. only fills one star, doesn't clear stars. fix it!!!
+    private void SetText() {
         string text = "";
         for (int i = 0; i < hints.Count; i++)
         {
             if (isCol)
             {
-                Debug.Log(position + " col hint state: " + hints[i].solved);
                 if (solved || hints[i].solved)
                 {
-                    Debug.Log(position + " col hint solved");
                     text = text + "<color=black>" + hints[i].num + "</color>" + "\n";
                 } else
                 {
-                    Debug.Log(position + "col hint not solved");
                     text = text + hints[i].num + "\n";
                 }
             }
             else
             {
-                Debug.Log(position + " row state: " + hints[i].solved);
                 if (solved || hints[i].solved)
                 {
-                    Debug.Log(position + " row hint solved");
-                    text = text + "<color=black>" + hints[i].num + "</color>";
+                    text = text + " <color=black>" + hints[i].num + "</color>";
                 } else
                 {
-                    Debug.Log(position + " row hint not solved");
                     text = text + " " + hints[i].num;
                 }
             }
