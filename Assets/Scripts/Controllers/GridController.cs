@@ -7,8 +7,7 @@ public class GridController : MonoBehaviour
     public int gameDimensionX { get; set; }
     public int gameDimensionY { get; set; }
     public GameObject boxPrefab;
-    //change this to list of lists
-    private GameObject[,] grid;
+    private List<List<GameObject>> grid;
     private GameObject gridSprite;
     private (float x, float y) gridSpriteSize;
     public float boxSize { get; set; }
@@ -31,7 +30,7 @@ public class GridController : MonoBehaviour
         {
             DebugLog($"SetCell: ERROR: gameDimensions are not viable coordinates: {col}, {row}");
         }
-        BoxController box = grid[row, col].GetComponent<BoxController>();
+        BoxController box = grid[col][row].GetComponent<BoxController>();
         int stateUpdate = -1;
         if (box.GetState() == Constants.INACTIVE)
         {
@@ -57,12 +56,12 @@ public class GridController : MonoBehaviour
         List<int> colStates = new List<int>();
         for (int i = 0; i < gameDimensionX; i++)
         {
-            colStates.Add(grid[row, i].GetComponent<BoxController>().GetState());
+            colStates.Add(grid[i][row].GetComponent<BoxController>().GetState());
         }
         List<int> rowStates = new List<int>();
         for (int i = 0; i < gameDimensionY; i++)
         {
-            rowStates.Add(grid[i, col].GetComponent<BoxController>().GetState());
+            rowStates.Add(grid[col][i].GetComponent<BoxController>().GetState());
         }
         return new List<List<int>> { colStates, rowStates };
     }
@@ -74,7 +73,6 @@ public class GridController : MonoBehaviour
 
     public void SetUpGrid()
     {
-        //ok, rendering is backwards. x = 2, y = 3 shows 3 cols, 2 rows. but game allows 2 cols, 3 rows. may need some untangling.
         bool sidesSame = gameDimensionX == gameDimensionY;
         if (!sidesSame)
         {
@@ -112,14 +110,15 @@ public class GridController : MonoBehaviour
         */
 
 
-        grid = new GameObject[gameDimensionX, gameDimensionY];
-        for (int i = 0; i < gameDimensionY; i++)
+        grid = new List<List<GameObject>>();
+        for (int col = 0; col < gameDimensionX; col++)
         {
-            for (int j = 0; j < gameDimensionX; j++)
+            grid.Add(new List<GameObject>());
+            for (int row = 0; row < gameDimensionY; row++)
             {
                 
-                Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
-                Debug.Log($"startPosition:({startPosition.x},{startPosition.y}). currentPosition: ({startPosition.x + (i * boxSize)},{startPosition.y - (j * boxSize)})");
+                Vector2 currentPosition = new Vector2(startPosition.x + (col * boxSize), startPosition.y - (row * boxSize));
+                Debug.Log($"startPosition:({startPosition.x},{startPosition.y}). currentPosition: ({startPosition.x + (col * boxSize)},{startPosition.y - (row * boxSize)})");
                 Debug.Log($"boxSize: {boxSize}. boxPrefab details: ({boxPrefab.transform.position.x},{boxPrefab.transform.position.y})");
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
                 box.transform.SetParent(gameObject.transform, false);
@@ -127,7 +126,7 @@ public class GridController : MonoBehaviour
                 //ok, i think this is where things are going wrong with the box offset
                 box.transform.localScale = new Vector2(boxSize * 1.9f, boxSize * 1.9f);
                 //box.transform.localScale = new Vector2(boxSize, boxSize);
-                grid[j, i] = box;
+                grid[col].Add(box);
             }
         }
     }
