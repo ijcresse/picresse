@@ -53,15 +53,15 @@ public class GridController : MonoBehaviour
 
     public List<List<int>> GetGridLines(int col, int row)
     {
-        List<int> colStates = new List<int>();
+        List<int> colStates = new();
         for (int i = 0; i < gameDimensionX; i++)
         {
-            colStates.Add(grid[i][row].GetComponent<BoxController>().GetState());
+            colStates.Add(grid[col][i].GetComponent<BoxController>().GetState());
         }
-        List<int> rowStates = new List<int>();
+        List<int> rowStates = new();
         for (int i = 0; i < gameDimensionY; i++)
         {
-            rowStates.Add(grid[col][i].GetComponent<BoxController>().GetState());
+            rowStates.Add(grid[i][row].GetComponent<BoxController>().GetState());
         }
         return new List<List<int>> { colStates, rowStates };
     }

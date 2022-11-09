@@ -74,7 +74,7 @@ public class PuzzleController : MonoBehaviour
         Vector2 updatedScale;
         int lineSize;
         if (isCol) {
-            updatedPosition = new Vector2(startPosition.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2) + boxSize,
+            updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2),
                                           hintBG.transform.position.y);
             updatedScale = new Vector2(boxSize, hintBG.transform.localScale.y);
             hintLine.transform.position = updatedPosition;
@@ -82,7 +82,7 @@ public class PuzzleController : MonoBehaviour
             lineSize = puzzle.Count;
         } else {
             updatedPosition = new Vector2(hintBG.transform.position.x,
-                                          startPosition.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2) - boxSize);
+                                          hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
             updatedScale = new Vector2(hintBG.transform.localScale.x, boxSize);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
@@ -101,7 +101,7 @@ public class PuzzleController : MonoBehaviour
     }
 
     List<Hint> GetHints(List<bool> puzzleLine) {
-        List<Hint> hints = new List<Hint>();
+        List<Hint> hints = new();
         int num = 0;
         for (int i = 0; i < puzzleLine.Count; i++) {
             if (puzzleLine[i]) {
@@ -119,19 +119,17 @@ public class PuzzleController : MonoBehaviour
         return hints;
     }
 
-    private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> colThenRow)
+    private void OnBoxUpdated(int stateUpdate, int col, int row, List<List<int>> lineData)
     {
-        //bool colSolved = hintColumns[col].CalculateSolved(colThenRow[1]);
-        //bool rowSolved = hintRows[row].CalculateSolved(colThenRow[0]); //rename this dumb var
-        hintColumns[col].solved = hintColumns[col].CalculateSolved(colThenRow[1]);
-        hintRows[row].solved = hintRows[row].CalculateSolved(colThenRow[0]);
+        hintColumns[col].solved = hintColumns[col].CalculateSolved(lineData[0]);
+        hintRows[row].solved = hintRows[row].CalculateSolved(lineData[1]);
         
         if (CheckSolved())
         {
             Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
         }
-        hintColumns[col].CheckCaptures(colThenRow[1]);
-        hintRows[row].CheckCaptures(colThenRow[0]);
+        hintColumns[col].CheckCaptures(lineData[0]);
+        hintRows[row].CheckCaptures(lineData[1]);
     }
 
     private bool CheckSolved()
