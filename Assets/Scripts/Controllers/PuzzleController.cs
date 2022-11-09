@@ -74,15 +74,19 @@ public class PuzzleController : MonoBehaviour
         Vector2 updatedScale;
         int lineSize;
         if (isCol) {
-            updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2),
+            //updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2),
+            //                              hintBG.transform.position.y);
+            updatedPosition = new Vector2(startPosition.x + (position * boxSize),
                                           hintBG.transform.position.y);
             updatedScale = new Vector2(boxSize, hintBG.transform.localScale.y);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
             lineSize = puzzle.Count;
         } else {
+            //updatedPosition = new Vector2(hintBG.transform.position.x,
+            //                              hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
             updatedPosition = new Vector2(hintBG.transform.position.x,
-                                          hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
+                                          startPosition.y - (position * boxSize));
             updatedScale = new Vector2(hintBG.transform.localScale.x, boxSize);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
