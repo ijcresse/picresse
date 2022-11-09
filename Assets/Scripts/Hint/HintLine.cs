@@ -70,7 +70,6 @@ public class HintLine : MonoBehaviour
             }
 
             //check to make sure hint is contiguously solved
-            //TODO: this breaks on hint{1}, size 2 if both boxes are filled. adjust gridPtr appropriately.
             for (int j = 0; j < currentHint.num; j++)
             {
                 if (gridPtr >= gridLine.Count || gridLine[gridPtr] != Constants.ACTIVE)
@@ -169,6 +168,8 @@ public class HintLine : MonoBehaviour
         }
     }
 
+    //TODO: SCALE TEXT TO ROW SIZE(?)
+    //TODO: THESE COLOR VALS SHOULD COME FRO MA COLOR OBJ
     private void SetText() {
         string text = "";
         for (int i = 0; i < hints.Count; i++)
@@ -177,20 +178,20 @@ public class HintLine : MonoBehaviour
             {
                 if (solved || hints[i].solved)
                 {
-                    text = text + "<color=black>" + hints[i].num + "</color>" + "\n";
+                    text = text + "<color=#848C6C>" + hints[i].num + "</color>\n";
                 } else
                 {
-                    text = text + hints[i].num + "\n";
+                    text = text + "<color=#1d2912>" + hints[i].num + "</color>\n";
                 }
             }
             else
             {
                 if (solved || hints[i].solved)
                 {
-                    text = text + " <color=black>" + hints[i].num + "</color>";
+                    text = text + " <color=#848C6C>" + hints[i].num + "</color>";
                 } else
                 {
-                    text = text + " " + hints[i].num;
+                    text = text + " <color=#1d2912>" + hints[i].num + "</color>";
                 }
             }
         }

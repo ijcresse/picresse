@@ -67,14 +67,6 @@ public class GridController : MonoBehaviour
         return new List<List<int>> { colStates, rowStates };
     }
 
-    // int GetCellState(int x, int y) {
-    //     if (x < 0 || y < 0 || x > gameDimensionX - 1 || y > gameDimensionY - 1) {
-    //         DebugLog($"SetCell: ERROR: gameDimensions are not viable coordinates: {x}, {y}");
-    //         return -1;
-    //     }
-    //     return grid[x,y].GetState();
-    // }
-
     void DebugLog(string s)
     {
         Debug.Log("GridController: " + s);
@@ -82,23 +74,59 @@ public class GridController : MonoBehaviour
 
     public void SetUpGrid()
     {
+        //ok, rendering is backwards. x = 2, y = 3 shows 3 cols, 2 rows. but game allows 2 cols, 3 rows. may need some untangling.
+        bool sidesSame = gameDimensionX == gameDimensionY;
+        if (!sidesSame)
+        {
+            Debug.Log("GridController.SetUpGrid: sides not the same.");
+            float pixOffset = 0;
+            if (gameDimensionX < gameDimensionY)
+            {
+                boxSize = gridSpriteSize.y / gameDimensionY;
+                Debug.Log($"boxsize for x<y: {boxSize}");
+                pixOffset = (gridSpriteSize.x - boxSize * gameDimensionX) / 2;
+                startPosition = new Vector2(gridSprite.transform.position.x - pixOffset,
+                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+            }
+            else
+            {
+                boxSize = gridSpriteSize.x / gameDimensionX;
+                Debug.Log($"boxsize for y<x: {boxSize}");
+                pixOffset = (gridSpriteSize.y - boxSize * gameDimensionY) / 2;
+                startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
+                                            gridSprite.transform.position.y + pixOffset);
+            }
+        } else
+        {
+            boxSize = gridSpriteSize.y / gameDimensionY;
+            startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
+                                        gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+        }
+
+        /*
         boxSize = gridSpriteSize.y / gameDimensionY; //always compare one direction to get a square. also, y is generally smaller (25 x 20)
                                                      //later... fix this so it compares the smallest size, so we can better support variable sizes
         DebugLog($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
         startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+        */
+
 
         grid = new GameObject[gameDimensionX, gameDimensionY];
         for (int i = 0; i < gameDimensionY; i++)
         {
             for (int j = 0; j < gameDimensionX; j++)
             {
+                
                 Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
+                Debug.Log($"startPosition:({startPosition.x},{startPosition.y}). currentPosition: ({startPosition.x + (i * boxSize)},{startPosition.y - (j * boxSize)})");
+                Debug.Log($"boxSize: {boxSize}. boxPrefab details: ({boxPrefab.transform.position.x},{boxPrefab.transform.position.y})");
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
                 box.transform.SetParent(gameObject.transform, false);
-                //TODO: better name pls
-                double temp = boxSize * 2;
-                box.transform.localScale = new Vector2((float)temp, (float)temp);
+
+                //ok, i think this is where things are going wrong with the box offset
+                box.transform.localScale = new Vector2(boxSize * 1.9f, boxSize * 1.9f);
+                //box.transform.localScale = new Vector2(boxSize, boxSize);
                 grid[j, i] = box;
             }
         }
