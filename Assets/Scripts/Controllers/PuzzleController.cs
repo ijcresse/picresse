@@ -6,9 +6,7 @@ public class PuzzleController : MonoBehaviour
 {
     public List<List<bool>> puzzle;
     private List<HintLine> hintColumns;
-    // private List<List<Hint>> hintColumns;
     private List<HintLine> hintRows;
-    // private List<List<Hint>> hintRows;
     public GameObject hintLinePrefab;
 
     // Start is called before the first frame update
@@ -17,7 +15,7 @@ public class PuzzleController : MonoBehaviour
         EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
-    public void CreatePuzzle(int x, int y) {
+    public void CreatePuzzle(int x, int y, Vector2 startPosition) {
         puzzle = new List<List<bool>>();
         for (int i = 0; i < y; i++) {
             string line = "";
@@ -27,7 +25,7 @@ public class PuzzleController : MonoBehaviour
                 line += puzzle[i][j] ? 'o' : 'x';
             }
         }
-        CreateHints();
+        CreateHints(startPosition);
     }
 
     public void CreatePuzzle(string base64Code) {
@@ -50,21 +48,21 @@ public class PuzzleController : MonoBehaviour
         return puzzleRow;
     }
 
-    private void CreateHints() {
+    private void CreateHints(Vector2 startPosition) {
         hintColumns = new List<HintLine>();
         hintRows = new List<HintLine>();
         for (int x = 0; x < puzzle[0].Count; x++) {
             List<bool> col = GetCol(x);
-            CreateHintLine(GetHints(col), true, x);
+            CreateHintLine(GetHints(col), true, x, startPosition);
         }
         for (int y = 0; y < puzzle.Count; y++) {
             List<bool> row = GetRow(y);
-            CreateHintLine(GetHints(row), false, y);
+            CreateHintLine(GetHints(row), false, y, startPosition);
         }
         CheckSolved();
     }
 
-    private void CreateHintLine(List<Hint> hints, bool isCol, int position) {
+    private void CreateHintLine(List<Hint> hints, bool isCol, int position, Vector2 startPosition) {
         GameObject hintSection = isCol ? GameObject.Find("HintCols") : GameObject.Find("HintRows");
         GameObject hintBG = isCol ? GameObject.Find("HintColsBG") : GameObject.Find("HintRowsBG");
         float boxSize = GameObject.Find("Grid").GetComponent<GridController>().boxSize;
@@ -74,17 +72,17 @@ public class PuzzleController : MonoBehaviour
 
         Vector2 updatedPosition;
         Vector2 updatedScale;
-        int lineSize = 0;
+        int lineSize;
         if (isCol) {
-            updatedPosition = new Vector2(hintBG.transform.position.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2), 
+            updatedPosition = new Vector2(startPosition.x + (position * boxSize) - (hintBG.transform.localScale.x / 2) + (boxSize / 2) + boxSize,
                                           hintBG.transform.position.y);
             updatedScale = new Vector2(boxSize, hintBG.transform.localScale.y);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;
             lineSize = puzzle.Count;
         } else {
-            updatedPosition = new Vector2(hintBG.transform.position.x, 
-                                          hintBG.transform.position.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2));
+            updatedPosition = new Vector2(hintBG.transform.position.x,
+                                          startPosition.y - (position * boxSize) + (hintBG.transform.localScale.y / 2) - (boxSize / 2) - boxSize);
             updatedScale = new Vector2(hintBG.transform.localScale.x, boxSize);
             hintLine.transform.position = updatedPosition;
             hintLine.transform.localScale = updatedScale;

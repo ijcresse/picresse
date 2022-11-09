@@ -132,15 +132,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_Color.b
-      value: 0.4764151
+      value: 0.17254902
       objectReference: {fileID: 0}
     - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_Color.g
-      value: 0.4764151
+      value: 0.34509805
       objectReference: {fileID: 0}
     - target: {fileID: 251732101, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.4117647
       objectReference: {fileID: 0}
     - target: {fileID: 3692159200809077592, guid: 7ed636a64e109734985fef7c9b94432e, type: 3}
       propertyPath: m_Name
@@ -233,7 +233,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.10588236, g: 0.28627452, b: 0.39607847, a: 0}
+  m_BackGroundColor: {r: 0.8509804, g: 0.7254902, b: 0.5529412, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -290,15 +290,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
       propertyPath: m_Color.b
-      value: 0.52519107
+      value: 0.7137255
       objectReference: {fileID: 0}
     - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.8156863
       objectReference: {fileID: 0}
     - target: {fileID: 250351497, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
       propertyPath: m_Color.r
-      value: 0.4669811
+      value: 0.87058824
       objectReference: {fileID: 0}
     - target: {fileID: 4651316362717853436, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
       propertyPath: m_RootOrder
@@ -590,8 +590,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e1ca3b3470cb3e4f94e3ef8bb268deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameDimensionX: 2
-  gameDimensionY: 3
+  gameDimensionX: 3
+  gameDimensionY: 2
   clock: {fileID: 4651316362717853437, guid: 17dd95ead9ecc924eb138fdc08685344, type: 3}
   hintCols: {fileID: 7119479243941571650, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
   hintRows: {fileID: 751176033660996516, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
@@ -773,7 +773,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.86444515, g: 0.48584908, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -979,15 +979,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.7137255
       objectReference: {fileID: 0}
     - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
       propertyPath: m_Color.g
-      value: 0.8965784
+      value: 0.8156863
       objectReference: {fileID: 0}
     - target: {fileID: 137046735, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
       propertyPath: m_Color.r
-      value: 0.504717
+      value: 0.87058824
       objectReference: {fileID: 0}
     - target: {fileID: 7119479243941571650, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
       propertyPath: m_Name
@@ -1096,15 +1096,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_Color.b
-      value: 0.7994683
+      value: 0.7137255
       objectReference: {fileID: 0}
     - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.8156863
       objectReference: {fileID: 0}
     - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_Color.r
-      value: 0.4481132
+      value: 0.87058824
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
@@ -1182,7 +1182,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.5424528, b: 0.89014864, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
