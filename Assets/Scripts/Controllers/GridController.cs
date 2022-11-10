@@ -81,12 +81,9 @@ public class GridController : MonoBehaviour
             if (gameDimensionX < gameDimensionY)
             {
                 boxSize = gridSpriteSize.y / gameDimensionY;
-                //pixOffset = (gridSpriteSize.x - boxSize * gameDimensionX) / 2;
                 pixOffset = 1f - (float) gameDimensionX / (float) gameDimensionY;
                 pixOffset *= 0.5f;
                 pixOffset *= gridSpriteSize.x;
-                //pixOffset *= gridSprite.GetComponent<SpriteRenderer>().bounds.size.x;
-                Debug.Log(pixOffset);
                 startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2 + pixOffset,
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
 
@@ -112,7 +109,9 @@ public class GridController : MonoBehaviour
             else
             {
                 boxSize = gridSpriteSize.x / gameDimensionX;
-                pixOffset = (gridSpriteSize.y - boxSize * gameDimensionY) / 2;
+                pixOffset = 1f - (float) gameDimensionY / (float) gameDimensionX;
+                pixOffset *= 0.5f;
+                pixOffset *= gridSpriteSize.y;
                 startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2 - pixOffset);
             }
