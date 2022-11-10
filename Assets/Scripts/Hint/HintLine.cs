@@ -7,7 +7,6 @@ public class HintLine : MonoBehaviour
 {
     public List<Hint> hints {get; private set;}
     bool isCol;
-    bool active {get; set;} //true when cursor is on this line
     public bool solved {get; set;}
     int position; //leftmost/topmost is 0
     public GameObject hintTextPrefab;
@@ -19,7 +18,6 @@ public class HintLine : MonoBehaviour
         CreateHintRanges(lineSize);
         this.isCol = isCol;
         this.position = position;
-        this.active = active;
         this.solved = hints[0].num == 0; //if hint is 0, no more hints should exist.
         
         hintText = Instantiate(hintTextPrefab, new Vector2(0f, 0f), hintTextPrefab.transform.rotation).GetComponent<TextMeshProUGUI>();
@@ -201,13 +199,10 @@ public class HintLine : MonoBehaviour
     private void OnActivated(int column, int row) { //ok one, we're having a problem with how the system adds/removes too much alpha. two, it says it's deactivating, but it's not?
         Color color = hintLineSprite.color;
         if (isCol && column == position) {
-            active = true;
             color.a = 100;
         } else if (!isCol && row == position) {
-            active = true;
             color.a = 100;
         } else {
-            active = false;
             color.a = 0;
         }
 
