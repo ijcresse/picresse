@@ -83,37 +83,31 @@ public class GridController : MonoBehaviour
                 boxSize = gridSpriteSize.y / gameDimensionY;
                 pixOffset = 1f - (float) gameDimensionX / (float) gameDimensionY;
                 pixOffset *= 0.5f;
-                pixOffset *= gridSpriteSize.x;
-                startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2 + pixOffset,
+                startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2 + pixOffset * gridSpriteSize.x,
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
 
-                /*
-                GameObject hintColsUI = GameObject.Find("HintColsUI");
-                HorizontalLayoutGroup verticalLayout = hintColsUI.GetComponent<HorizontalLayoutGroup>();
-                RectOffset padding = verticalLayout.padding;
-                padding = new RectOffset((int) pixOffset, (int) pixOffset, padding.top, padding.bottom);
-                verticalLayout.padding = padding;
-                */
-
-                /*
-                GameObject hintColsBG = GameObject.Find("HintColsBG");
-                Transform cam = Camera.main.transform;
-                Vector2 worldPt = hintColsBG.transform.position;
-                worldPt = new Vector2(worldPt.x + pixOffset, worldPt.y); //bottom left edge
-                worldPt = cam.TransformPoint(worldPt);
-                hintColsUI.transform.position = RectTransformUtility.WorldToScreenPoint(Camera.main, worldPt);
-                Debug.Log(worldPt);
-                */
-                //Component verticalLayout = hintColsUI.GetComponent<UI>();
+                HorizontalLayoutGroup layout = GameObject.Find("HintColsUI").GetComponent<HorizontalLayoutGroup>();
+                RectOffset padding = layout.padding;
+                pixOffset *= layout.GetComponent<RectTransform>().rect.width;
+                padding = new RectOffset((int)pixOffset, (int)pixOffset, 0, 0);
+                layout.padding = padding;
             }
             else
             {
                 boxSize = gridSpriteSize.x / gameDimensionX;
                 pixOffset = 1f - (float) gameDimensionY / (float) gameDimensionX;
                 pixOffset *= 0.5f;
-                pixOffset *= gridSpriteSize.y;
                 startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
-                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2 - pixOffset);
+                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2 - pixOffset * gridSpriteSize.y);
+
+                
+                VerticalLayoutGroup layout = GameObject.Find("HintRowsUI").GetComponent<VerticalLayoutGroup>();
+                RectOffset padding = layout.padding;
+                pixOffset *= layout.GetComponent<RectTransform>().rect.height;
+                padding = new RectOffset(0, 0, (int)pixOffset, (int)pixOffset);
+                layout.padding = padding;
+                
+
             }
         } else
         {
