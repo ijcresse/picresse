@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
         cursorScript = cursor.GetComponent<CursorController>();
 
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-        puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY);
+        puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY, gridScript.startPosition);
     }
 
     void Update()

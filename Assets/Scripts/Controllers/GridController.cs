@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GridController : MonoBehaviour
 {
     public int gameDimensionX { get; set; }
     public int gameDimensionY { get; set; }
     public GameObject boxPrefab;
-    //change this to list of lists
-    private GameObject[,] grid;
+    private List<List<GameObject>> grid;
     private GameObject gridSprite;
     private (float x, float y) gridSpriteSize;
     public float boxSize { get; set; }
@@ -31,7 +31,7 @@ public class GridController : MonoBehaviour
         {
             DebugLog($"SetCell: ERROR: gameDimensions are not viable coordinates: {col}, {row}");
         }
-        BoxController box = grid[row, col].GetComponent<BoxController>();
+        BoxController box = grid[col][row].GetComponent<BoxController>();
         int stateUpdate = -1;
         if (box.GetState() == Constants.INACTIVE)
         {
@@ -54,26 +54,18 @@ public class GridController : MonoBehaviour
 
     public List<List<int>> GetGridLines(int col, int row)
     {
-        List<int> colStates = new List<int>();
-        for (int i = 0; i < gameDimensionX; i++)
-        {
-            colStates.Add(grid[row, i].GetComponent<BoxController>().GetState());
-        }
-        List<int> rowStates = new List<int>();
+        List<int> colStates = new();
         for (int i = 0; i < gameDimensionY; i++)
         {
-            rowStates.Add(grid[i, col].GetComponent<BoxController>().GetState());
+            colStates.Add(grid[col][i].GetComponent<BoxController>().GetState());
+        }
+        List<int> rowStates = new();
+        for (int i = 0; i < gameDimensionX; i++)
+        {
+            rowStates.Add(grid[i][row].GetComponent<BoxController>().GetState());
         }
         return new List<List<int>> { colStates, rowStates };
     }
-
-    // int GetCellState(int x, int y) {
-    //     if (x < 0 || y < 0 || x > gameDimensionX - 1 || y > gameDimensionY - 1) {
-    //         DebugLog($"SetCell: ERROR: gameDimensions are not viable coordinates: {x}, {y}");
-    //         return -1;
-    //     }
-    //     return grid[x,y].GetState();
-    // }
 
     void DebugLog(string s)
     {
@@ -82,24 +74,63 @@ public class GridController : MonoBehaviour
 
     public void SetUpGrid()
     {
-        boxSize = gridSpriteSize.y / gameDimensionY; //always compare one direction to get a square. also, y is generally smaller (25 x 20)
-                                                     //later... fix this so it compares the smallest size, so we can better support variable sizes
-        DebugLog($"boxSize: {boxSize}, gridSpriteSize: ({gridSpriteSize.x}, {gridSpriteSize.y})");
-        startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
+        bool sidesSame = gameDimensionX == gameDimensionY;
+        float pixOffset;
+        if (!sidesSame)
+        {
+            if (gameDimensionX < gameDimensionY)
+            {
+                boxSize = gridSpriteSize.y / gameDimensionY;
+                pixOffset = 1f - (float) gameDimensionX / (float) gameDimensionY;
+                pixOffset *= 0.5f;
+                startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2 + pixOffset * gridSpriteSize.x,
                                             gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
 
-        grid = new GameObject[gameDimensionX, gameDimensionY];
-        for (int i = 0; i < gameDimensionY; i++)
-        {
-            for (int j = 0; j < gameDimensionX; j++)
+                HorizontalLayoutGroup layout = GameObject.Find("HintColsUI").GetComponent<HorizontalLayoutGroup>();
+                RectOffset padding = layout.padding;
+                pixOffset *= layout.GetComponent<RectTransform>().rect.width;
+                padding = new RectOffset((int)pixOffset, (int)pixOffset, 0, 0);
+                layout.padding = padding;
+            }
+            else
             {
-                Vector2 currentPosition = new Vector2(startPosition.x + (i * boxSize), startPosition.y - (j * boxSize));
+                boxSize = gridSpriteSize.x / gameDimensionX;
+                pixOffset = 1f - (float) gameDimensionY / (float) gameDimensionX;
+                pixOffset *= 0.5f;
+                startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
+                                            gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2 - pixOffset * gridSpriteSize.y);
+
+                
+                VerticalLayoutGroup layout = GameObject.Find("HintRowsUI").GetComponent<VerticalLayoutGroup>();
+                RectOffset padding = layout.padding;
+                pixOffset *= layout.GetComponent<RectTransform>().rect.height;
+                padding = new RectOffset(0, 0, (int)pixOffset, (int)pixOffset);
+                layout.padding = padding;
+                
+
+            }
+        } else
+        {
+            boxSize = gridSpriteSize.y / gameDimensionY;
+            startPosition = new Vector2(gridSprite.transform.position.x - (gridSpriteSize.x / 2) + boxSize / 2,
+                                        gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
+        }
+
+
+        grid = new List<List<GameObject>>();
+        for (int col = 0; col < gameDimensionX; col++)
+        {
+            grid.Add(new List<GameObject>());
+            for (int row = 0; row < gameDimensionY; row++)
+            {
+                
+                Vector2 currentPosition = new Vector2(startPosition.x + (col * boxSize), startPosition.y - (row * boxSize));
                 GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
                 box.transform.SetParent(gameObject.transform, false);
-                //TODO: better name pls
-                double temp = boxSize * 2;
-                box.transform.localScale = new Vector2((float)temp, (float)temp);
-                grid[j, i] = box;
+
+                //ok, i think this is where things are going wrong with the box offset
+                box.transform.localScale = new Vector2(boxSize * 1.9f, boxSize * 1.9f);
+                grid[col].Add(box);
             }
         }
     }

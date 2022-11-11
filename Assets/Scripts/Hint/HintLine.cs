@@ -7,7 +7,6 @@ public class HintLine : MonoBehaviour
 {
     public List<Hint> hints {get; private set;}
     bool isCol;
-    bool active {get; set;} //true when cursor is on this line
     public bool solved {get; set;}
     int position; //leftmost/topmost is 0
     public GameObject hintTextPrefab;
@@ -19,7 +18,6 @@ public class HintLine : MonoBehaviour
         CreateHintRanges(lineSize);
         this.isCol = isCol;
         this.position = position;
-        this.active = active;
         this.solved = hints[0].num == 0; //if hint is 0, no more hints should exist.
         
         hintText = Instantiate(hintTextPrefab, new Vector2(0f, 0f), hintTextPrefab.transform.rotation).GetComponent<TextMeshProUGUI>();
@@ -57,7 +55,6 @@ public class HintLine : MonoBehaviour
         }
     }
 
-    //works in happy case, but fails on at least too many dots. (eg hint 1 on 2x2, with 2 dots filled)
     public bool CalculateSolved(List<int> gridLine) {
         int gridPtr = 0;
         for (int i = 0; i < hints.Count; i++)
@@ -82,12 +79,10 @@ public class HintLine : MonoBehaviour
             }
             currentHint.solved = true;
 
-            if (gridPtr < gridLine.Count && i < hints.Count - 1)
+            //check for one active too many
+            if (gridPtr < gridLine.Count && i < hints.Count - 1 && gridLine[gridPtr] == Constants.ACTIVE)
             {
-                if (gridLine[gridPtr] == Constants.ACTIVE)
-                {
-                    return false;
-                }
+                return false;
             } else if (gridPtr >= gridLine.Count && i < hints.Count - 1)
             {
                 return false;
@@ -95,7 +90,6 @@ public class HintLine : MonoBehaviour
         }
 
         //hints all solved. go through and make sure there are no additional active boxes.
-        gridPtr++;
         for (; gridPtr < gridLine.Count; gridPtr++)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE)
@@ -110,14 +104,14 @@ public class HintLine : MonoBehaviour
     {
         ClearHints();
         int gridPtr = 0;
-        bool capturing = true; //wall counts as capturer //still not finding the wall capture unfortuantely!
+        bool capturing = true;
         int captureCount = 0;
         while(gridPtr < gridLine.Count)
         {
             if (gridLine[gridPtr] == Constants.ACTIVE && capturing)
             {
                 captureCount++;
-                if (gridPtr == gridLine.Count - 1) //activated something at the wall, check for capture!
+                if (gridPtr == gridLine.Count - 1) //wall check
                 {
                     FindValidHintInRange(gridPtr, captureCount);
                 }
@@ -172,34 +166,30 @@ public class HintLine : MonoBehaviour
         }
     }
 
-    private void SetText() { //TODO: this is buggy. only fills one star, doesn't clear stars. fix it!!!
+    //TODO: SCALE TEXT TO ROW SIZE(?)
+    //TODO: THESE COLOR VALS SHOULD COME FRO MA COLOR OBJ
+    private void SetText() {
         string text = "";
         for (int i = 0; i < hints.Count; i++)
         {
             if (isCol)
             {
-                Debug.Log(position + " col hint state: " + hints[i].solved);
                 if (solved || hints[i].solved)
                 {
-                    Debug.Log(position + " col hint solved");
-                    text = text + "<color=black>" + hints[i].num + "</color>" + "\n";
+                    text = text + "<color=#848C6C>" + hints[i].num + "</color>\n";
                 } else
                 {
-                    Debug.Log(position + "col hint not solved");
-                    text = text + hints[i].num + "\n";
+                    text = text + "<color=#1d2912>" + hints[i].num + "</color>\n";
                 }
             }
             else
             {
-                Debug.Log(position + " row state: " + hints[i].solved);
                 if (solved || hints[i].solved)
                 {
-                    Debug.Log(position + " row hint solved");
-                    text = text + "<color=black>" + hints[i].num + "</color>";
+                    text = text + " <color=#848C6C>" + hints[i].num + "</color>";
                 } else
                 {
-                    Debug.Log(position + " row hint not solved");
-                    text = text + " " + hints[i].num;
+                    text = text + " <color=#1d2912>" + hints[i].num + "</color>";
                 }
             }
         }
@@ -209,13 +199,10 @@ public class HintLine : MonoBehaviour
     private void OnActivated(int column, int row) { //ok one, we're having a problem with how the system adds/removes too much alpha. two, it says it's deactivating, but it's not?
         Color color = hintLineSprite.color;
         if (isCol && column == position) {
-            active = true;
             color.a = 100;
         } else if (!isCol && row == position) {
-            active = true;
             color.a = 100;
         } else {
-            active = false;
             color.a = 0;
         }
 
