@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PuzzleController : MonoBehaviour
@@ -27,6 +28,7 @@ public class PuzzleController : MonoBehaviour
         }
         CreateHints(startPosition);
         GeneratePuzzleString();
+        GameObject.Find("ClockUI").GetComponent<TextMeshProUGUI>().text = puzzleCode;
         CreatePuzzle(puzzleCode);
     }
 
