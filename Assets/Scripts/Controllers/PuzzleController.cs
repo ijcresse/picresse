@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ public class PuzzleController : MonoBehaviour
     private List<HintLine> hintColumns;
     private List<HintLine> hintRows;
     public GameObject hintLinePrefab;
+    public string puzzleCode { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -26,10 +26,53 @@ public class PuzzleController : MonoBehaviour
             }
         }
         CreateHints(startPosition);
+        GeneratePuzzleString();
+        CreatePuzzle(puzzleCode);
     }
 
     public void CreatePuzzle(string base64Code) {
+        List<List<bool>> generatedPuzzle = new();
+        int cols = System.Convert.ToInt32(base64Code.Substring(0, 2));
+        int rows = System.Convert.ToInt32(base64Code.Substring(2, 2));
+        byte[] arr = System.Convert.FromBase64String(base64Code[4..]);
+        int bits = System.BitConverter.ToInt32(arr);
+        int bitLength = 1 << cols * rows;
+        for (int i = 0; i < cols; i++)
+        {
+            generatedPuzzle.Add(new List<bool>());
+            for (int j = 0; j < rows; j++)
+            {
+                int b = bits & bitLength;
+                generatedPuzzle[i].Add(b != 0);
+                bitLength >>= 1;
+            }
+        }
+    }
 
+    private void GeneratePuzzleString()
+    {
+        puzzleCode = "";
+        int cols = puzzle.Count;
+        int rows = puzzle[0].Count;
+        int bits = 0;
+        for (int i = 0; i < cols; i++)
+        {
+            for (int j = 0; j < puzzle[0].Count; j++)
+            {
+                bits += puzzle[i][j] ? 1 : 0;
+                bits = bits << 1;
+            }
+        }
+        if (cols < 10)
+        {
+            puzzleCode = "0";
+        }
+        puzzleCode += cols;
+        if (rows < 10)
+        {
+            puzzleCode += "0";
+        }
+        puzzleCode += rows + System.Convert.ToBase64String(System.BitConverter.GetBytes(bits));
     }
 
     List<bool> GetCol(int col) {
