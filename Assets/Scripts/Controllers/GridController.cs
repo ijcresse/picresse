@@ -29,7 +29,7 @@ public class GridController : MonoBehaviour
     {
         if (col < 0 || row < 0 || col > gameDimensionX - 1 || row > gameDimensionY - 1)
         {
-            DebugLog($"SetCell: ERROR: gameDimensions are not viable coordinates: {col}, {row}");
+            Debug.Log($"GridController.SetCell ERROR: gameDimensions are not viable coordinates: {col}, {row}");
         }
         BoxController box = grid[col][row].GetComponent<BoxController>();
         int stateUpdate = -1;
@@ -66,12 +66,6 @@ public class GridController : MonoBehaviour
         }
         return new List<List<int>> { colStates, rowStates };
     }
-
-    void DebugLog(string s)
-    {
-        Debug.Log("GridController: " + s);
-    }
-
     public void SetUpGrid()
     {
         bool sidesSame = gameDimensionX == gameDimensionY;
