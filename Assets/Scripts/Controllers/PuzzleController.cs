@@ -36,24 +36,21 @@ public class PuzzleController : MonoBehaviour
 
     public void CreatePuzzle(string base64Code) {
         List<List<bool>> generatedPuzzle = new();
+
         int cols = System.Convert.ToInt32(base64Code.Substring(0, 2));
         int rows = System.Convert.ToInt32(base64Code.Substring(2, 2));
         byte[] arr = System.Convert.FromBase64String(base64Code[4..]);
-        
-        /*
-        int bits = System.BitConverter.ToInt32(arr);
-        int bitLength = 1 << cols * rows;
+        BitArray bits = new(arr);
+
+        int count = 0;
         for (int i = 0; i < cols; i++)
         {
             generatedPuzzle.Add(new List<bool>());
             for (int j = 0; j < rows; j++)
             {
-                int b = bits & bitLength;
-                generatedPuzzle[i].Add(b != 0);
-                bitLength >>= 1;
+                generatedPuzzle[i].Add(bits[count++]);
             }
         }
-        */
     }
 
     private void GeneratePuzzleString()
