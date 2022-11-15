@@ -110,7 +110,6 @@ public class GridController : MonoBehaviour
                                         gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
         }
 
-
         grid = new List<List<GameObject>>();
         for (int col = 0; col < gameDimensionX; col++)
         {

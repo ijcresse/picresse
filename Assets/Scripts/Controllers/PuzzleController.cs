@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -37,6 +39,8 @@ public class PuzzleController : MonoBehaviour
         int cols = System.Convert.ToInt32(base64Code.Substring(0, 2));
         int rows = System.Convert.ToInt32(base64Code.Substring(2, 2));
         byte[] arr = System.Convert.FromBase64String(base64Code[4..]);
+        
+        /*
         int bits = System.BitConverter.ToInt32(arr);
         int bitLength = 1 << cols * rows;
         for (int i = 0; i < cols; i++)
@@ -49,6 +53,7 @@ public class PuzzleController : MonoBehaviour
                 bitLength >>= 1;
             }
         }
+        */
     }
 
     private void GeneratePuzzleString()
@@ -56,15 +61,73 @@ public class PuzzleController : MonoBehaviour
         puzzleCode = "";
         int cols = puzzle.Count;
         int rows = puzzle[0].Count;
-        int bits = 0;
+        bool[] bits = puzzle.SelectMany(x => x).ToArray();
+        byte[] bytes = new byte[(bits.Length + 7) / 8];
+        byte bit = 0;
+        int bitIndex = 0;
+        int byteIndex = 0;
+        foreach (bool box in bits)
+        {
+            byte b = (byte)(box ? 1 : 0);
+            b <<= bitIndex++;
+            bit |= b;
+            if (bitIndex == 8)
+            {
+                bytes[byteIndex++] = bit;
+                bitIndex = 0;
+                bit = 0;
+            }
+        }
+        if (bitIndex > 0)
+        {
+            bytes[byteIndex] = bit;
+        }
+        /* 
+         
+        for (int i = 0; i < bits.Length; i++)
+        {
+            byte b = (byte)(bits[i] ? 1 : 0);
+            bit |= b;
+            bit <<= 1;
+            bitIndex++;
+            if (bitIndex == 8)
+            {
+                bytes[byteIndex] = bit;
+                bitIndex = 0;
+                bit = 0;
+                byteIndex++;
+            }
+        }
+        */
+        puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
+
+        /*
+        byte bits = 0;
+        byte[] bytes = new byte[(cols * rows) / 8 + 1];
+        int bytePtr = 0;
+        int count = 0;
+        for (int i = 0; i < cols; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                //bits[(i + j) % 8] = puzzle[i][j];
+                byte b = (byte)(puzzle[i][j] ? 1 : 0);
+                b <<= count;
+                bits |= b;
+            }
+        }
+        List<bool> list = puzzle.SelectMany(x => x).ToList();
+        */
+        /*
+         * bool[] bits = new bool[cols * rows];
         for (int i = 0; i < cols; i++)
         {
             for (int j = 0; j < puzzle[0].Count; j++)
             {
-                bits += puzzle[i][j] ? 1 : 0;
-                bits = bits << 1;
+                bits[i + j] = puzzle[i][j] ? true : false;
             }
         }
+        BitArray b = new BitArray(bits);
         if (cols < 10)
         {
             puzzleCode = "0";
@@ -74,7 +137,9 @@ public class PuzzleController : MonoBehaviour
         {
             puzzleCode += "0";
         }
-        puzzleCode += rows + System.Convert.ToBase64String(System.BitConverter.GetBytes(bits));
+        */
+        //System.Convert.ToBase64String()
+        //puzzleCode += rows + System.Convert.ToBase64String(System.BitConverter.GetBytes(b.));
     }
 
     List<bool> GetCol(int col) {
