@@ -13,26 +13,6 @@ public class GameController : MonoBehaviour
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
 
-    /*
-    void Start()
-    {
-
-        gridScript = GameObject.Find("Grid").GetComponent<GridController>();
-        gridScript.gameDimensionX = gameDimensionX;
-        gridScript.gameDimensionY = gameDimensionY;
-        gridScript.SetUpGrid();
-
-        float boxSize = gridScript.boxSize;
-
-        GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
-        cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
-        cursorScript = cursor.GetComponent<CursorController>();
-
-        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-        puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY, gridScript.startPosition);
-
-    }
-    */
     void Start()
     {
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
@@ -44,11 +24,17 @@ public class GameController : MonoBehaviour
             gridScript.gameDimensionY = System.Convert.ToInt32(ScenePersistence.base64Code.Substring(2, 2));
             puzzleScript.CreatePuzzle(ScenePersistence.base64Code, gridScript.startPosition);
         }
-        else
+        else if (ScenePersistence.difficulty != 0)
         {
+            gridScript.gameDimensionX = ScenePersistence.width;
+            gridScript.gameDimensionY = ScenePersistence.height;
+            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, ScenePersistence.difficulty, gridScript.startPosition);
+        } else
+        {
+            Debug.Log("Invalid start flow. Leaving this in for debugging purposes but this should not be normally accessed.");
             gridScript.gameDimensionX = gameDimensionX;
             gridScript.gameDimensionY = gameDimensionY;
-            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, gridScript.startPosition);
+            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, Constants.DIFFICULTY_MEDIUM, gridScript.startPosition);
         }
 
         gridScript.SetUpGrid();

@@ -961,7 +961,6 @@ GameObject:
   m_Component:
   - component: {fileID: 123013966}
   - component: {fileID: 123013968}
-  - component: {fileID: 123013967}
   m_Layer: 5
   m_Name: HardRadioButton
   m_TagString: Untagged
@@ -991,19 +990,6 @@ RectTransform:
   m_AnchoredPosition: {x: 190.2, y: -0.00000095367}
   m_SizeDelta: {x: 48.0254, y: 42.3949}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &123013967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123013965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
 --- !u!114 &123013968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1047,7 +1033,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 937035146}
   toggleTransition: 1
   graphic: {fileID: 1883379581}
-  m_Group: {fileID: 0}
+  m_Group: {fileID: 897918380}
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2133,13 +2119,14 @@ GameObject:
   - component: {fileID: 745921511}
   - component: {fileID: 745921513}
   - component: {fileID: 745921512}
+  - component: {fileID: 745921514}
   m_Layer: 5
   m_Name: NewPuzzleMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &745921511
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2205,6 +2192,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745921510}
   m_CullTransparentMesh: 1
+--- !u!114 &745921514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745921510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5eed176efc51e54cbbcf5c437101c4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &750744028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2790,6 +2789,7 @@ GameObject:
   - component: {fileID: 897918377}
   - component: {fileID: 897918379}
   - component: {fileID: 897918378}
+  - component: {fileID: 897918380}
   m_Layer: 5
   m_Name: DifficultyPanel
   m_TagString: Untagged
@@ -2860,6 +2860,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897918376}
   m_CullTransparentMesh: 1
+--- !u!114 &897918380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897918376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AllowSwitchOff: 1
 --- !u!1 &903565826
 GameObject:
   m_ObjectHideFlags: 0
@@ -3299,7 +3312,7 @@ GameObject:
   - component: {fileID: 1014764841}
   - component: {fileID: 1014764840}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WidthInputText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4611,7 +4624,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1400966803}
   - component: {fileID: 1400966805}
-  - component: {fileID: 1400966804}
   m_Layer: 5
   m_Name: EasyRadioButton
   m_TagString: Untagged
@@ -4641,19 +4653,6 @@ RectTransform:
   m_AnchoredPosition: {x: 91.16, y: -0.00000095367}
   m_SizeDelta: {x: 48.0254, y: 42.3949}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1400966804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400966802}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
 --- !u!114 &1400966805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4697,7 +4696,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1925101690}
   toggleTransition: 1
   graphic: {fileID: 2140499053}
-  m_Group: {fileID: 0}
+  m_Group: {fileID: 897918380}
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4712,7 +4711,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1450110476}
   - component: {fileID: 1450110478}
-  - component: {fileID: 1450110477}
   m_Layer: 5
   m_Name: MediumRadioButton
   m_TagString: Untagged
@@ -4742,19 +4740,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140.7, y: -0.00000095367}
   m_SizeDelta: {x: 48.0254, y: 42.3949}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1450110477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450110475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
 --- !u!114 &1450110478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4798,7 +4783,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2035191054}
   toggleTransition: 1
   graphic: {fileID: 517946652}
-  m_Group: {fileID: 0}
+  m_Group: {fileID: 897918380}
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5936,7 +5921,7 @@ GameObject:
   - component: {fileID: 1856722967}
   - component: {fileID: 1856722966}
   m_Layer: 5
-  m_Name: Text
+  m_Name: HeightInputText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

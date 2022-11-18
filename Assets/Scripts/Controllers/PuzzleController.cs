@@ -18,13 +18,13 @@ public class PuzzleController : MonoBehaviour
         EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
-    public void CreatePuzzle(int x, int y, Vector2 startPosition) {
+    public void CreatePuzzle(int x, int y, int difficulty, Vector2 startPosition) {
         puzzle = new List<List<bool>>();
         for (int i = 0; i < y; i++) {
             string line = "";
             puzzle.Add(new List<bool>());
             for (int j = 0; j < x; j++) {
-                puzzle[i].Add(Random.Range(0f, 1f) <= 0.6f);
+                puzzle[i].Add(Random.Range(0f, 1f) <= difficulty * 0.15f);
                 line += puzzle[i][j] ? 'o' : 'x';
             }
         }
