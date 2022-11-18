@@ -148,10 +148,10 @@ public class HintLine : MonoBehaviour
         int match = -1;
         for (int i = 0; i < hints.Count; i++)
         {
-            if (hints[i].earliestPosition <= gridPtr && gridPtr <= hints[i].latestPosition &&
+            if (hints[i].earliestPosition <= (gridPtr - captureCount + 1) && gridPtr <= hints[i].latestPosition &&
                 hints[i].num == captureCount && !hints[i].solved)
             {
-                if (match != -1)
+                if (match != -1) //ambiguous match
                 {
                     return;
                 } else
