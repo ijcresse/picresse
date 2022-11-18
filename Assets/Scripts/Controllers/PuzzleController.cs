@@ -31,10 +31,9 @@ public class PuzzleController : MonoBehaviour
         CreateHints(startPosition);
         GeneratePuzzleString();
         GameObject.Find("ClockUI").GetComponent<TextMeshProUGUI>().text = puzzleCode;
-        CreatePuzzle(puzzleCode);
     }
 
-    public void CreatePuzzle(string base64Code) {
+    public void CreatePuzzle(string base64Code, Vector2 startPosition) {
         List<List<bool>> generatedPuzzle = new();
 
         int cols = System.Convert.ToInt32(base64Code.Substring(0, 2));
@@ -51,6 +50,10 @@ public class PuzzleController : MonoBehaviour
                 generatedPuzzle[i].Add(bits[count++]);
             }
         }
+        puzzle = generatedPuzzle;
+        CreateHints(startPosition);
+        GeneratePuzzleString();
+        GameObject.Find("ClockUI").GetComponent<TextMeshProUGUI>().text = puzzleCode;
     }
 
     private void GeneratePuzzleString()
@@ -75,68 +78,11 @@ public class PuzzleController : MonoBehaviour
                 bit = 0;
             }
         }
-        if (bitIndex > 0)
+        if (bitIndex > 0) //0505W42bAQ== || W42bAQ==
         {
             bytes[byteIndex] = bit;
         }
-        /* 
-         
-        for (int i = 0; i < bits.Length; i++)
-        {
-            byte b = (byte)(bits[i] ? 1 : 0);
-            bit |= b;
-            bit <<= 1;
-            bitIndex++;
-            if (bitIndex == 8)
-            {
-                bytes[byteIndex] = bit;
-                bitIndex = 0;
-                bit = 0;
-                byteIndex++;
-            }
-        }
-        */
         puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
-
-        /*
-        byte bits = 0;
-        byte[] bytes = new byte[(cols * rows) / 8 + 1];
-        int bytePtr = 0;
-        int count = 0;
-        for (int i = 0; i < cols; i++)
-        {
-            for (int j = 0; j < rows; j++)
-            {
-                //bits[(i + j) % 8] = puzzle[i][j];
-                byte b = (byte)(puzzle[i][j] ? 1 : 0);
-                b <<= count;
-                bits |= b;
-            }
-        }
-        List<bool> list = puzzle.SelectMany(x => x).ToList();
-        */
-        /*
-         * bool[] bits = new bool[cols * rows];
-        for (int i = 0; i < cols; i++)
-        {
-            for (int j = 0; j < puzzle[0].Count; j++)
-            {
-                bits[i + j] = puzzle[i][j] ? true : false;
-            }
-        }
-        BitArray b = new BitArray(bits);
-        if (cols < 10)
-        {
-            puzzleCode = "0";
-        }
-        puzzleCode += cols;
-        if (rows < 10)
-        {
-            puzzleCode += "0";
-        }
-        */
-        //System.Convert.ToBase64String()
-        //puzzleCode += rows + System.Convert.ToBase64String(System.BitConverter.GetBytes(b.));
     }
 
     List<bool> GetCol(int col) {

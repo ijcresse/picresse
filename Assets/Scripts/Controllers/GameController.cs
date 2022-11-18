@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Constants;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -13,9 +12,11 @@ public class GameController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
-    
+
+    /*
     void Start()
     {
+
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
         gridScript.gameDimensionX = gameDimensionX;
         gridScript.gameDimensionY = gameDimensionY;
@@ -29,6 +30,34 @@ public class GameController : MonoBehaviour
 
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
         puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY, gridScript.startPosition);
+
+    }
+    */
+    void Start()
+    {
+        gridScript = GameObject.Find("Grid").GetComponent<GridController>();
+        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+
+        if (ScenePersistence.base64Code != null)
+        {
+            gridScript.gameDimensionX = System.Convert.ToInt32(ScenePersistence.base64Code.Substring(0, 2));
+            gridScript.gameDimensionY = System.Convert.ToInt32(ScenePersistence.base64Code.Substring(2, 2));
+            puzzleScript.CreatePuzzle(ScenePersistence.base64Code, gridScript.startPosition);
+        }
+        else
+        {
+            gridScript.gameDimensionX = gameDimensionX;
+            gridScript.gameDimensionY = gameDimensionY;
+            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, gridScript.startPosition);
+        }
+
+        gridScript.SetUpGrid();
+
+        float boxSize = gridScript.boxSize;
+
+        GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
+        cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
+        cursorScript = cursor.GetComponent<CursorController>();
     }
 
     void Update()
