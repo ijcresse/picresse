@@ -179,7 +179,7 @@ public class PuzzleController : MonoBehaviour
         
         if (CheckSolved())
         {
-            Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
+            EventSystem.current.AlertWin();   
         }
         hintColumns[col].CheckCaptures(lineData[0]);
         hintRows[row].CheckCaptures(lineData[1]);

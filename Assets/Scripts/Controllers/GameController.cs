@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
+    public bool isGameActive;
 
     void Start()
     {
@@ -44,10 +45,16 @@ public class GameController : MonoBehaviour
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
+
+        isGameActive = true;
     }
 
     void Update()
     {
+        if (!isGameActive)
+        {
+            return;
+        }
         int gameDimensionX = gridScript.gameDimensionX;
         int gameDimensionY = gridScript.gameDimensionY;
         float boxSize = gridScript.boxSize;
