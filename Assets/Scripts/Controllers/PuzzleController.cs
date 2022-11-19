@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,39 +18,42 @@ public class PuzzleController : MonoBehaviour
         EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
-    public void CreatePuzzle(int x, int y, Vector2 startPosition) {
+    public void CreatePuzzle(int x, int y, int difficulty, Vector2 startPosition) {
         puzzle = new List<List<bool>>();
         for (int i = 0; i < y; i++) {
             string line = "";
             puzzle.Add(new List<bool>());
             for (int j = 0; j < x; j++) {
-                puzzle[i].Add(Random.Range(0f, 1f) <= 0.6f);
+                puzzle[i].Add(Random.Range(0f, 1f) <= difficulty * 0.15f);
                 line += puzzle[i][j] ? 'o' : 'x';
             }
         }
         CreateHints(startPosition);
         GeneratePuzzleString();
         GameObject.Find("ClockUI").GetComponent<TextMeshProUGUI>().text = puzzleCode;
-        CreatePuzzle(puzzleCode);
     }
 
-    public void CreatePuzzle(string base64Code) {
+    public void CreatePuzzle(string base64Code, Vector2 startPosition) {
         List<List<bool>> generatedPuzzle = new();
+
         int cols = System.Convert.ToInt32(base64Code.Substring(0, 2));
         int rows = System.Convert.ToInt32(base64Code.Substring(2, 2));
         byte[] arr = System.Convert.FromBase64String(base64Code[4..]);
-        int bits = System.BitConverter.ToInt32(arr);
-        int bitLength = 1 << cols * rows;
+        BitArray bits = new(arr);
+
+        int count = 0;
         for (int i = 0; i < cols; i++)
         {
             generatedPuzzle.Add(new List<bool>());
             for (int j = 0; j < rows; j++)
             {
-                int b = bits & bitLength;
-                generatedPuzzle[i].Add(b != 0);
-                bitLength >>= 1;
+                generatedPuzzle[i].Add(bits[count++]);
             }
         }
+        puzzle = generatedPuzzle;
+        CreateHints(startPosition);
+        GeneratePuzzleString();
+        GameObject.Find("ClockUI").GetComponent<TextMeshProUGUI>().text = puzzleCode;
     }
 
     private void GeneratePuzzleString()
@@ -56,25 +61,28 @@ public class PuzzleController : MonoBehaviour
         puzzleCode = "";
         int cols = puzzle.Count;
         int rows = puzzle[0].Count;
-        int bits = 0;
-        for (int i = 0; i < cols; i++)
+        bool[] bits = puzzle.SelectMany(x => x).ToArray();
+        byte[] bytes = new byte[(bits.Length + 7) / 8];
+        byte bit = 0;
+        int bitIndex = 0;
+        int byteIndex = 0;
+        foreach (bool box in bits)
         {
-            for (int j = 0; j < puzzle[0].Count; j++)
+            byte b = (byte)(box ? 1 : 0);
+            b <<= bitIndex++;
+            bit |= b;
+            if (bitIndex == 8)
             {
-                bits += puzzle[i][j] ? 1 : 0;
-                bits = bits << 1;
+                bytes[byteIndex++] = bit;
+                bitIndex = 0;
+                bit = 0;
             }
         }
-        if (cols < 10)
+        if (bitIndex > 0) //0505W42bAQ== || W42bAQ==
         {
-            puzzleCode = "0";
+            bytes[byteIndex] = bit;
         }
-        puzzleCode += cols;
-        if (rows < 10)
-        {
-            puzzleCode += "0";
-        }
-        puzzleCode += rows + System.Convert.ToBase64String(System.BitConverter.GetBytes(bits));
+        puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
     }
 
     List<bool> GetCol(int col) {
@@ -171,7 +179,7 @@ public class PuzzleController : MonoBehaviour
         
         if (CheckSolved())
         {
-            Debug.Log("DEBUG PuzzleController.CheckSolved: Puzzle complete!");
+            EventSystem.current.AlertWin();   
         }
         hintColumns[col].CheckCaptures(lineData[0]);
         hintRows[row].CheckCaptures(lineData[1]);

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -21,6 +20,7 @@ public class HintLine : MonoBehaviour
         this.solved = hints[0].num == 0; //if hint is 0, no more hints should exist.
         
         hintText = Instantiate(hintTextPrefab, new Vector2(0f, 0f), hintTextPrefab.transform.rotation).GetComponent<TextMeshProUGUI>();
+        hintText.alignment = TextAlignmentOptions.Center;
         if (isCol)
         {
             hintText.transform.SetParent(GameObject.Find("HintColsUI").transform, false);
@@ -148,10 +148,10 @@ public class HintLine : MonoBehaviour
         int match = -1;
         for (int i = 0; i < hints.Count; i++)
         {
-            if (hints[i].earliestPosition <= gridPtr && gridPtr <= hints[i].latestPosition &&
+            if (hints[i].earliestPosition <= (gridPtr - captureCount + 1) && gridPtr <= hints[i].latestPosition &&
                 hints[i].num == captureCount && !hints[i].solved)
             {
-                if (match != -1)
+                if (match != -1) //ambiguous match
                 {
                     return;
                 } else

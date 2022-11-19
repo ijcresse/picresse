@@ -8,6 +8,7 @@ public class EventSystem : MonoBehaviour
     public static EventSystem current;
     public event Action<int, int> onCursorMovedTo;
     public event Action<int, int, int, List<List<int>>> onBoxUpdated;
+    public event Action onAlertWin;
 
     private void Awake()
     {
@@ -30,6 +31,17 @@ public class EventSystem : MonoBehaviour
         } else
         {
             Debug.Log("ERROR EventSystem.BoxUpdated: no registered listeners");
+        }
+    }
+
+    public void AlertWin()
+    {
+        if (onAlertWin != null)
+        {
+            onAlertWin();
+        } else
+        {
+            Debug.Log("ERROR EventSystem.AlertWin: no registered listeners");
         }
     }
 }

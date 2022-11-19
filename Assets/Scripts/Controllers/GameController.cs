@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Constants;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -13,12 +12,32 @@ public class GameController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
-    
+    public bool isGameActive;
+
     void Start()
     {
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
-        gridScript.gameDimensionX = gameDimensionX;
-        gridScript.gameDimensionY = gameDimensionY;
+        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+
+        if (ScenePersistence.base64Code != null)
+        {
+            gridScript.gameDimensionX = System.Convert.ToInt32(ScenePersistence.base64Code.Substring(0, 2));
+            gridScript.gameDimensionY = System.Convert.ToInt32(ScenePersistence.base64Code.Substring(2, 2));
+            puzzleScript.CreatePuzzle(ScenePersistence.base64Code, gridScript.startPosition);
+        }
+        else if (ScenePersistence.difficulty != 0)
+        {
+            gridScript.gameDimensionX = ScenePersistence.width;
+            gridScript.gameDimensionY = ScenePersistence.height;
+            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, ScenePersistence.difficulty, gridScript.startPosition);
+        } else
+        {
+            Debug.Log("Invalid start flow. Leaving this in for debugging purposes but this should not be normally accessed.");
+            gridScript.gameDimensionX = gameDimensionX;
+            gridScript.gameDimensionY = gameDimensionY;
+            puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, Constants.DIFFICULTY_MEDIUM, gridScript.startPosition);
+        }
+
         gridScript.SetUpGrid();
 
         float boxSize = gridScript.boxSize;
@@ -27,12 +46,15 @@ public class GameController : MonoBehaviour
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
 
-        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-        puzzleScript.CreatePuzzle(gameDimensionX, gameDimensionY, gridScript.startPosition);
+        isGameActive = true;
     }
 
     void Update()
     {
+        if (!isGameActive)
+        {
+            return;
+        }
         int gameDimensionX = gridScript.gameDimensionX;
         int gameDimensionY = gridScript.gameDimensionY;
         float boxSize = gridScript.boxSize;

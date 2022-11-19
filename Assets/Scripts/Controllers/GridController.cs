@@ -110,20 +110,18 @@ public class GridController : MonoBehaviour
                                         gridSprite.transform.position.y + (gridSpriteSize.y / 2) - boxSize / 2);
         }
 
-
         grid = new List<List<GameObject>>();
         for (int col = 0; col < gameDimensionX; col++)
         {
             grid.Add(new List<GameObject>());
             for (int row = 0; row < gameDimensionY; row++)
             {
-                
-                Vector2 currentPosition = new Vector2(startPosition.x + (col * boxSize), startPosition.y - (row * boxSize));
-                GameObject box = Instantiate(boxPrefab, currentPosition, boxPrefab.transform.rotation);
+                GameObject box = Instantiate(boxPrefab, new Vector2(), boxPrefab.transform.rotation);
                 box.transform.SetParent(gameObject.transform, false);
 
-                //ok, i think this is where things are going wrong with the box offset
                 box.transform.localScale = new Vector2(boxSize * 1.9f, boxSize * 1.9f);
+                Vector2 currentPosition = new Vector2(startPosition.x + (col * boxSize), startPosition.y - (row * boxSize));
+                box.transform.position = currentPosition;
                 grid[col].Add(box);
             }
         }
