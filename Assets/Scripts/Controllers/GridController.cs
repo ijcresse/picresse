@@ -25,7 +25,7 @@ public class GridController : MonoBehaviour
 
     }
 
-    public void SetCellState(int col, int row, bool isSpace)
+    public void SetCellState(int col, int row, int action)
     {
         if (col < 0 || row < 0 || col > gameDimensionX - 1 || row > gameDimensionY - 1)
         {
@@ -35,11 +35,11 @@ public class GridController : MonoBehaviour
         int stateUpdate = -1;
         if (box.GetState() == Constants.INACTIVE)
         {
-            if (isSpace)
+            if (action == Constants.KEY_FILL)
             {
                 stateUpdate = Constants.ACTIVE;
             }
-            else
+            else if (action == Constants.KEY_CROSS)
             {
                 stateUpdate = Constants.CROSSED;
             }
@@ -117,6 +117,9 @@ public class GridController : MonoBehaviour
             for (int row = 0; row < gameDimensionY; row++)
             {
                 GameObject box = Instantiate(boxPrefab, new Vector2(), boxPrefab.transform.rotation);
+                BoxController controller = box.GetComponent<BoxController>();
+                controller.x = col;
+                controller.y = row;
                 box.transform.SetParent(gameObject.transform, false);
 
                 box.transform.localScale = new Vector2(boxSize * 1.9f, boxSize * 1.9f);

@@ -1,4 +1,5 @@
 using Assets.Scripts.Constants;
+using Assets.Scripts.Controllers;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -14,8 +15,18 @@ public class GameController : MonoBehaviour
     private PuzzleController puzzleScript;
     public bool isGameActive;
 
+    private ControlData controls;
+
+    //reference to last updated box, to prevent repeated lookups
+    //TODO: look for more elegant solution
+    private (int x, int y) lastUpdatedPositions;
+    private int lastAction;
+
     void Start()
     {
+        //TODO: these should be constants. 
+        controls = new ControlData(0.5f, 0.25f);
+
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
 
@@ -55,30 +66,122 @@ public class GameController : MonoBehaviour
         {
             return;
         }
-        int gameDimensionX = gridScript.gameDimensionX;
-        int gameDimensionY = gridScript.gameDimensionY;
+
+        SetKeyState();
+
+        int move = controls.GetMove();
+        if (move != -1)
+        {
+            if (controls.repeatTimer == 0f)
+            {
+                controls.firstPress = true;
+            }
+            controls.repeatTimer += Time.deltaTime;
+        } else
+        {
+            controls.repeatTimer = 0f;
+        }
+
+        if (controls.firstPress)
+        {
+            CommitMove(move);
+        } else if (controls.repeatTimer > controls.timerThreshold)
+        {
+            if (controls.repeatTimer > controls.repeatSpeed)
+            {
+                //prevent going too high, for some god forbidden reason
+                controls.repeatTimer = controls.timerThreshold;
+                CommitMove(move);
+            }
+        }
+        controls.firstPress = false;
+
+        int action = controls.GetAction();
+        if (action != -1)
+        {
+            CommitAction(action);
+        }
+    }
+
+    private void CommitMove(int move)
+    {
         float boxSize = gridScript.boxSize;
+
+        switch (move)
+        {
+            case Constants.KEY_LEFT:
+                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: -1);
+                break;
+            case Constants.KEY_RIGHT:
+                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: 1);
+                break;
+            case Constants.KEY_UP:
+                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
+                break;
+            case Constants.KEY_DOWN:
+                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void CommitAction(int action)
+    {
+        (int x, int y) = cursorScript.GetGamePosition();
+        //skip update if it's the same action on the same square.
+        if ((lastUpdatedPositions.x != x || lastUpdatedPositions.y != y) || action != lastAction)
+        {
+            gridScript.SetCellState(x, y, action);
+        }
+        lastUpdatedPositions = (x, y);
+        lastAction = action;
+    }
+
+    private void SetKeyState()
+    {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: -1);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+            controls.movementKey[Constants.KEY_LEFT] = true;
+        } else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: 1);
+            controls.movementKey[Constants.KEY_LEFT] = false;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
+            controls.movementKey[Constants.KEY_RIGHT] = true;
+        } else if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            controls.movementKey[Constants.KEY_RIGHT] = false;
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
-        } else if (Input.GetKeyDown(KeyCode.Space)) {
-            (int x, int y) = cursorScript.GetGamePosition();
-            gridScript.SetCellState(x, y, true);
-        } else if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            (int x, int y) = cursorScript.GetGamePosition();
-            gridScript.SetCellState(x, y, false);
+            controls.movementKey[Constants.KEY_UP] = true;
+        } else if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            controls.movementKey[Constants.KEY_UP] = false;
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            controls.movementKey[Constants.KEY_DOWN] = true;
+        } else if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            controls.movementKey[Constants.KEY_DOWN] = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            controls.actionKey[Constants.KEY_FILL] = true;
+        } else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            controls.actionKey[Constants.KEY_FILL] = false;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            controls.actionKey[Constants.KEY_CROSS] = true;
+        } else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            controls.actionKey[Constants.KEY_CROSS] = false;
         }
     }
 }
