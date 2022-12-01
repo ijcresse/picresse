@@ -9,7 +9,8 @@ namespace Assets.Scripts.Controllers
 
         public List<bool> actionKey;
 
-        public bool firstPress;
+        public bool firstMovePress;
+        public bool firstActionPress;
         public float timerThreshold;
         public float repeatSpeed;
         public float repeatTimer;
@@ -18,9 +19,10 @@ namespace Assets.Scripts.Controllers
         {
             //left, right, down, up
             movementKey = new() { false, false, false, false };
-            //fill, cross
-            actionKey = new() { false, false };
-            firstPress = false;
+            //fill, cross, clear
+            actionKey = new() { false, false, false};
+            firstMovePress = false;
+            firstActionPress = false;
             repeatTimer = 0.0f;
             timerThreshold = threshold;
             this.repeatSpeed = repeatSpeed + threshold;
@@ -34,29 +36,6 @@ namespace Assets.Scripts.Controllers
         public int GetAction()
         {
             return actionKey.IndexOf(true);
-        }
-
-        public bool CanRepeat()
-        {
-            if (!firstPress)
-            {
-                if (repeatTimer > timerThreshold)
-                {
-                    if (repeatTimer % repeatSpeed == 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public void Clear()
-        {
-            movementKey = Enumerable.Repeat(false, movementKey.Count).ToList();
-            actionKey = Enumerable.Repeat(false, actionKey.Count).ToList();
-            firstPress = false;
-            repeatTimer = 0.0f;
         }
     }
 }

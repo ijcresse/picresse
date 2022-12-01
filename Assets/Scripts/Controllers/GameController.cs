@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     //TODO: look for more elegant solution
     private (int x, int y) lastUpdatedPositions;
     private int lastAction;
+    private int lastActionResult;
 
     void Start()
     {
@@ -74,7 +75,7 @@ public class GameController : MonoBehaviour
         {
             if (controls.repeatTimer == 0f)
             {
-                controls.firstPress = true;
+                controls.firstMovePress = true;
             }
             controls.repeatTimer += Time.deltaTime;
         } else
@@ -82,7 +83,7 @@ public class GameController : MonoBehaviour
             controls.repeatTimer = 0f;
         }
 
-        if (controls.firstPress)
+        if (controls.firstMovePress)
         {
             CommitMove(move);
         } else if (controls.repeatTimer > controls.timerThreshold)
@@ -94,12 +95,12 @@ public class GameController : MonoBehaviour
                 CommitMove(move);
             }
         }
-        controls.firstPress = false;
+        controls.firstMovePress = false;
 
         int action = controls.GetAction();
         if (action != -1)
         {
-            CommitAction(action);
+            CommitAction(action, move);
         }
     }
 
@@ -126,13 +127,24 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void CommitAction(int action)
+    private void CommitAction(int action, int move)
     {
         (int x, int y) = cursorScript.GetGamePosition();
         //skip update if it's the same action on the same square.
-        if ((lastUpdatedPositions.x != x || lastUpdatedPositions.y != y) || action != lastAction)
+        //no. we only want to skip on the same PRESS if it's the same action.
+        if (controls.firstActionPress)
         {
-            gridScript.SetCellState(x, y, action);
+            lastActionResult = gridScript.SetCellState(x, y, action);
+            controls.firstActionPress = false;
+        } else if ((lastUpdatedPositions.x != x || lastUpdatedPositions.y != y) || action != lastAction)
+        {
+            if (move != -1)
+            {
+                gridScript.OverwriteCellState(x, y, lastActionResult);
+            } else
+            {
+                lastActionResult = gridScript.SetCellState(x, y, action);
+            }
         }
         lastUpdatedPositions = (x, y);
         lastAction = action;
@@ -175,13 +187,16 @@ public class GameController : MonoBehaviour
         } else if (Input.GetKeyUp(KeyCode.Space))
         {
             controls.actionKey[Constants.KEY_FILL] = false;
+            controls.firstActionPress = true;
         }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             controls.actionKey[Constants.KEY_CROSS] = true;
+            controls.firstActionPress = true;
         } else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             controls.actionKey[Constants.KEY_CROSS] = false;
+            controls.firstActionPress = true;
         }
     }
 }

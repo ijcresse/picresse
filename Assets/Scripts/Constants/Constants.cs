@@ -19,6 +19,8 @@ class Constants
     public const int KEY_UP = 2;
     public const int KEY_DOWN = 3;
 
-    public const int KEY_FILL = 0;
-    public const int KEY_CROSS = 1;
+    public const int KEY_CLEAR = 0;
+    public const int KEY_FILL = 1;
+    public const int KEY_CROSS = 2;
+    
 }

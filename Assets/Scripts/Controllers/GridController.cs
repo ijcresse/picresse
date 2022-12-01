@@ -25,7 +25,9 @@ public class GridController : MonoBehaviour
 
     }
 
-    public void SetCellState(int col, int row, int action)
+    //sets the new cell state.
+    //new state depends on the current state of the box.
+    public int SetCellState(int col, int row, int action)
     {
         if (col < 0 || row < 0 || col > gameDimensionX - 1 || row > gameDimensionY - 1)
         {
@@ -35,6 +37,7 @@ public class GridController : MonoBehaviour
         int stateUpdate = -1;
         if (box.GetState() == Constants.INACTIVE)
         {
+            /*
             if (action == Constants.KEY_FILL)
             {
                 stateUpdate = Constants.ACTIVE;
@@ -43,10 +46,42 @@ public class GridController : MonoBehaviour
             {
                 stateUpdate = Constants.CROSSED;
             }
+            */
+            stateUpdate = action;
         }
         else if (box.GetState() == Constants.ACTIVE || box.GetState() == Constants.CROSSED)
         {
             stateUpdate = Constants.INACTIVE;
+        }
+        box.SetState(stateUpdate);
+        EventSystem.current.BoxUpdated(stateUpdate, col, row, GetGridLines(col, row));
+        return stateUpdate;
+    }
+
+    //overwrites to the new state.
+    //for moving while an action key is held down.
+    public void OverwriteCellState(int col, int row, int action)
+    {
+        if (col < 0 || row < 0 || col > gameDimensionX - 1 || row > gameDimensionY - 1)
+        {
+            Debug.Log($"GridController.SetCell ERROR: gameDimensions are not viable coordinates: {col}, {row}");
+        }
+        BoxController box = grid[col][row].GetComponent<BoxController>();
+        int stateUpdate = -1;
+        switch (action)
+        {
+            case Constants.KEY_FILL:
+                stateUpdate = Constants.ACTIVE;
+                break;
+            case Constants.KEY_CROSS:
+                stateUpdate = Constants.CROSSED;
+                break;
+            case Constants.KEY_CLEAR:
+                stateUpdate = Constants.INACTIVE;
+                break;
+            default:
+                Debug.Log($"GridController.OverwriteCell ERROR: stateUpdate invalid value: {stateUpdate}");
+                break;
         }
         box.SetState(stateUpdate);
         EventSystem.current.BoxUpdated(stateUpdate, col, row, GetGridLines(col, row));
