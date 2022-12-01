@@ -13,4 +13,14 @@ class Constants
     public const int DIFFICULTY_EASY = 4;
     public const int DIFFICULTY_MEDIUM = 3;
     public const int DIFFICULTY_HARD = 1;
+
+    public const int KEY_LEFT = 0;
+    public const int KEY_RIGHT = 1;
+    public const int KEY_UP = 2;
+    public const int KEY_DOWN = 3;
+
+    public const int KEY_CLEAR = 0;
+    public const int KEY_FILL = 1;
+    public const int KEY_CROSS = 2;
+    
 }

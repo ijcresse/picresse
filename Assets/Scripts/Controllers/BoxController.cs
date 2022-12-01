@@ -7,7 +7,10 @@ public class BoxController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Sprite[] spriteArray = new Sprite[2];
     private int state;
+    //TODO: fix this
     private string color = "#9A3013";
+    public int x { get; set; }
+    public int y { get; set; }
 
     void Start()
     {
