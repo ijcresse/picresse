@@ -192,10 +192,16 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             controls.actionKey[Constants.KEY_CROSS] = true;
-            controls.firstActionPress = true;
         } else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             controls.actionKey[Constants.KEY_CROSS] = false;
+            controls.firstActionPress = true;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            controls.actionKey[Constants.KEY_CLEAR] = true;
+        } else if (Input.GetKeyUp(KeyCode.LeftControl)) {
+            controls.actionKey[Constants.KEY_CLEAR] = false;
             controls.firstActionPress = true;
         }
     }
