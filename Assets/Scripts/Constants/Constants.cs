@@ -1,4 +1,4 @@
-class Constants
+static class Constants
 {
     public const int INACTIVE = 0;
     public const int ACTIVE = 1;

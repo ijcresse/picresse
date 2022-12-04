@@ -56,6 +56,18 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    public void DrawPuzzle()
+    {
+        string input = TrimInput(GameObject.Find("WidthInputText").GetComponent<TextMeshProUGUI>().text);
+        ScenePersistence.width = Convert.ToInt32(input);
+        input = TrimInput(GameObject.Find("HeightInputText").GetComponent<TextMeshProUGUI>().text);
+        ScenePersistence.height = Convert.ToInt32(input);
+        if (ValidateDrawPuzzle())
+        {
+            SceneManager.LoadScene("GameScene");
+        }
+    }
+
     //input fields seem to have an invisible trailing character that's causing problems.
     private string TrimInput(string input)
     {
@@ -116,5 +128,23 @@ public class MainMenuController : MonoBehaviour
         {
             return true;
         }
+    }
+    private bool ValidateDrawPuzzle()
+    {
+        string errors = "";
+        if (ScenePersistence.width == 0)
+        {
+            errors += "Width missing.\n";
+        }
+        if (ScenePersistence.height == 0)
+        {
+            errors += "Height missing.\n";
+        }
+        if (errors.Length > 0)
+        {
+            Debug.Log($"MainMenuController.ValidateNewPuzzle: errors: {errors}");
+            return false;
+        }
+        return true;
     }
 }
