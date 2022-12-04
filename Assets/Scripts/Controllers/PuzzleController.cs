@@ -78,11 +78,17 @@ public class PuzzleController : MonoBehaviour
                 bit = 0;
             }
         }
-        if (bitIndex > 0) //0505W42bAQ== || W42bAQ==
+        if (bitIndex > 0)
         {
             bytes[byteIndex] = bit;
         }
         puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
+    }
+
+    public void GeneratePuzzleString(List<List<bool>> grid)
+    {
+        puzzle = grid;
+        GeneratePuzzleString();
     }
 
     List<bool> GetCol(int col) {

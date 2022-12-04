@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        //TODO: these should be constants. 
+        //TODO: these should be constants.
         controls = new ControlData(0.3f, 0.08f);
 
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
