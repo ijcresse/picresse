@@ -91,7 +91,7 @@ public class DrawController : MonoBehaviour
         {
             complete = puzzleScript.GeneratePuzzleString(gridScript.GetGridState());
         }
-        GameObject.Find("DrawCodeInput").GetComponent<TMP_InputField>().text = puzzleScript.puzzleCode;
+        GameObject.Find("DrawCodeText").GetComponent<TextMeshProUGUI>().text = puzzleScript.puzzleCode;
         GUIUtility.systemCopyBuffer = puzzleScript.puzzleCode;
     }
 }
