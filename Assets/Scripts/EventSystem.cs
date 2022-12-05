@@ -18,8 +18,6 @@ public class EventSystem : MonoBehaviour
     public void CursorMovedTo(int column, int row) {
         if (onCursorMovedTo != null) {
             onCursorMovedTo(column, row);
-        } else {
-            Debug.Log("ERROR EventSystem.CursorMovedTo: no registered listeners");
         }
     }
 
@@ -28,9 +26,6 @@ public class EventSystem : MonoBehaviour
         if (onBoxUpdated != null)
         {
             onBoxUpdated(stateUpdate, col, row, colThenRow);
-        } else
-        {
-            Debug.Log("ERROR EventSystem.BoxUpdated: no registered listeners");
         }
     }
 
@@ -39,9 +34,6 @@ public class EventSystem : MonoBehaviour
         if (onAlertWin != null)
         {
             onAlertWin();
-        } else
-        {
-            Debug.Log("ERROR EventSystem.AlertWin: no registered listeners");
         }
     }
 }

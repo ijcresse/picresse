@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
 
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+        puzzleScript.RegisterListener();
 
         if (ScenePersistence.base64Code != null)
         {

@@ -1,6 +1,7 @@
 using Assets.Scripts.Constants;
 using Assets.Scripts.Controllers;
 using UnityEngine;
+using TMPro;
 
 public class DrawController : MonoBehaviour
 {
@@ -80,5 +81,17 @@ public class DrawController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    //triggered via the button in the clock area 
+    public void CreatePuzzleCode()
+    {
+        bool complete = false;
+        while (!complete)
+        {
+            complete = puzzleScript.GeneratePuzzleString(gridScript.GetGridState());
+        }
+        GameObject.Find("DrawCodeInput").GetComponent<TMP_InputField>().text = puzzleScript.puzzleCode;
+        GUIUtility.systemCopyBuffer = puzzleScript.puzzleCode;
     }
 }

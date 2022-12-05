@@ -88,6 +88,20 @@ public class GridController : MonoBehaviour
         return new List<List<int>> { colStates, rowStates };
     }
 
+    public List<List<bool>> GetGridState()
+    {
+        List<List<bool>> gridState = new();
+        for (int i = 0; i < gameDimensionX; i++)
+        {
+            gridState.Add(new());
+            for (int j = 0; j < gameDimensionY; j++)
+            {
+                gridState[i].Add(grid[i][j].GetComponent<BoxController>().GetState() == Constants.ACTIVE);
+            }
+        }
+        return gridState;
+    }
+
     public void SetUpGrid()
     {
         gridSprite = GameObject.Find("GridBG");

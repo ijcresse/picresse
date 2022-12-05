@@ -5,15 +5,22 @@ p0: add hint/mark button for counting. total: 5
   overwritten by anything 2
   cleared by hitting empty again 1
  ensure doesn't interfere with puzzle solving, just colors square 2-3
- 
+
+p0a: refactor controller
+ add event triggers for each key
+  tie triggers into movement, update lastMove
+  remove old triggers for movement
+ BONUS have controller keys be static vars set by player
+  players can view/update controls in options menu
+
 p1: create puzzle 8
- 'draw puzzle' button on main menu 2
- new draw puzzle view 5
+ draw puzzle button on main menu 2
+ new draw puzzle view 5x
   use current puzzle view 1
   change functionality to support puzzle creation 3
    on fly puzzle code generation 1
-   only fill grid, no need to alert puzzle or anything 3
-   fill and clear only, no cross/hint 1
+   only fill grid, no need to alert puzzle or anything 3x
+   fill and clear only, no cross/hint 1x
    
    +resize functionality (wipes progress) NOT MVP 5
     menu button brings up options 3

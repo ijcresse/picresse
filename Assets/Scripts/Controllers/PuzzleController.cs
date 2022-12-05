@@ -15,6 +15,11 @@ public class PuzzleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    public void RegisterListener()
+    {
         EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
@@ -85,10 +90,11 @@ public class PuzzleController : MonoBehaviour
         puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
     }
 
-    public void GeneratePuzzleString(List<List<bool>> grid)
+    public bool GeneratePuzzleString(List<List<bool>> grid)
     {
         puzzle = grid;
         GeneratePuzzleString();
+        return true;
     }
 
     List<bool> GetCol(int col) {

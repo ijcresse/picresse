@@ -13,10 +13,12 @@ namespace Assets.Scripts.Controllers
 
         public bool firstMovePress;
         public bool firstActionPress;
+
         public float timerThreshold;
         public float repeatSpeed;
         public float repeatTimer;
 
+        private int lastMove;
         (int x, int y) lastUpdatedPositions;
         private int lastAction;
         private int lastActionResult;
@@ -40,7 +42,8 @@ namespace Assets.Scripts.Controllers
 
             firstMovePress = false;
             firstActionPress = false;
-            
+
+            lastMove = -1;
             lastUpdatedPositions = (0, 0);
             lastAction = -1;
             lastActionResult = -1;
@@ -70,10 +73,11 @@ namespace Assets.Scripts.Controllers
                 repeatTimer = 0f;
             }
 
-            if (firstMovePress)
+            if (firstMovePress || lastMove != move)
             {
                 moveFunc(move);
-            } else if (repeatTimer > timerThreshold)
+            }
+            else if (repeatTimer > timerThreshold)
             {
                 if (repeatTimer > repeatSpeed)
                 {
@@ -82,6 +86,7 @@ namespace Assets.Scripts.Controllers
                 }
             }
             firstMovePress = false;
+            lastMove = move;
         }
 
         public int GetAction()
