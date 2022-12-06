@@ -73,19 +73,20 @@ public class GameController : MonoBehaviour
     {
         float boxSize = gridScript.boxSize;
 
+        //TODO: refactor Move function's parameters
         switch (move)
         {
             case Constants.KEY_LEFT:
-                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: -1);
+                cursorScript.Move(gridScript.gameDimensionX, gridScript.gameDimensionY, boxSize, xMove: -1);
                 break;
             case Constants.KEY_RIGHT:
-                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, xMove: 1);
+                cursorScript.Move(gridScript.gameDimensionX, gridScript.gameDimensionY, boxSize, xMove: 1);
                 break;
             case Constants.KEY_UP:
-                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: -1);
+                cursorScript.Move(gridScript.gameDimensionX, gridScript.gameDimensionY, boxSize, yMove: -1);
                 break;
             case Constants.KEY_DOWN:
-                cursorScript.Move(gameDimensionX, gameDimensionY, boxSize, yMove: 1);
+                cursorScript.Move(gridScript.gameDimensionX, gridScript.gameDimensionY, boxSize, yMove: 1);
                 break;
             default:
                 break;
