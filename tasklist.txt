@@ -1,0 +1,8 @@
+﻿2022 12 5
+MAINSCENE: set drawscene box to "Create your own puzzle
+DRAWSCENE: generate hints as you draw -> lower chance of difficult puzzle
+GAMESCENE: on finish, make crosses fade a bit
+ new random puzzle on finish screen is busted
+CURSOR: more delay before repeating
+ make cursor stand out more
+ 
