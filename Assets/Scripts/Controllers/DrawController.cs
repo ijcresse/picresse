@@ -86,11 +86,7 @@ public class DrawController : MonoBehaviour
     //triggered via the button in the clock area 
     public void CreatePuzzleCode()
     {
-        bool complete = false;
-        while (!complete)
-        {
-            complete = puzzleScript.GeneratePuzzleString(gridScript.GetGridState());
-        }
+        puzzleScript.GeneratePuzzleString(gridScript.GetGridState());
         GameObject.Find("DrawCodeText").GetComponent<TextMeshProUGUI>().text = puzzleScript.puzzleCode;
         GUIUtility.systemCopyBuffer = puzzleScript.puzzleCode;
     }

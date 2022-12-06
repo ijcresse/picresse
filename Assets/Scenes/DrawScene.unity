@@ -1777,8 +1777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c82479cf2779e2843aff73e41ba6e72a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameDimensionX: 3
-  gameDimensionY: 3
+  gameDimensionX: 5
+  gameDimensionY: 5
   clock: {fileID: 1540522323}
   hintCols: {fileID: 1263413839}
   hintRows: {fileID: 1502050471}
