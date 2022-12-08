@@ -64,7 +64,7 @@ public class MainMenuController : MonoBehaviour
         ScenePersistence.height = Convert.ToInt32(input);
         if (ValidateDrawPuzzle())
         {
-            SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene("DrawScene");
         }
     }
 

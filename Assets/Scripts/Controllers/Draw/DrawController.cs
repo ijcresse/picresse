@@ -14,7 +14,8 @@ public class DrawController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
-    public bool isDrawingActive;
+
+    public GameObject drawMenu;
 
     private ControlData controls;
 
@@ -44,8 +45,6 @@ public class DrawController : MonoBehaviour
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
-
-        isDrawingActive = true;
     }
 
     void Update()
@@ -53,6 +52,13 @@ public class DrawController : MonoBehaviour
         controls.SetKeyState();
         //only allow fill/clear
         controls.actionKey[Constants.KEY_CROSS] = false;
+
+        //TODO: i think it's time to refactor controls into an event system, not update every frame.
+        if (controls.isPaused)
+        {
+            drawMenu.SetActive(controls.isPaused);
+            return;
+        }
 
         controls.Move(CommitMove);
         (int x, int y) = cursorScript.GetGamePosition();

@@ -1338,7 +1338,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589082264}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e1ca3b3470cb3e4f94e3ef8bb268deb, type: 3}
+  m_Script: {fileID: 11500000, guid: 541d9288c17507648b20548a3b810160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gameDimensionX: 5
@@ -1347,7 +1347,7 @@ MonoBehaviour:
   hintCols: {fileID: 7119479243941571650, guid: 47ce337a42313e04c9c9c8acae043f61, type: 3}
   hintRows: {fileID: 751176033660996516, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
   cursorPrefab: {fileID: 8463095937945697698, guid: 03f4f5bcafa8bd2409f3f4c969680ff3, type: 3}
-  isGameActive: 1
+  isGameActive: 0
 --- !u!114 &1589082267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589082264}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e406da0a993314a4f88529257e53738a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f2c72bf52c411046acc3ba1af842d69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   victoryPanel: {fileID: 1621868823}
@@ -1600,7 +1600,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1621868823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e406da0a993314a4f88529257e53738a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f2c72bf52c411046acc3ba1af842d69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   victoryPanel: {fileID: 1621868823}
@@ -2313,6 +2313,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 609819271}
     m_Modifications:
+    - target: {fileID: 2066858394, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: hintLineSprite
+      value: 
+      objectReference: {fileID: 5884257996548318537, guid: 4c79bf2453d7e12499fe79cafc0ad07e, type: 3}
+    - target: {fileID: 2066858394, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: hintTextPrefab
+      value: 
+      objectReference: {fileID: 2881310960333831531, guid: 39e49dded4a69fe4782460fd030e6b4f, type: 3}
     - target: {fileID: 751176033660996516, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_Name
       value: HintRows
@@ -2361,6 +2369,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5699512758966525110, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: hintLineSprite
+      value: 
+      objectReference: {fileID: 5884257996548318537, guid: 4c79bf2453d7e12499fe79cafc0ad07e, type: 3}
+    - target: {fileID: 5699512758966525110, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
+      propertyPath: hintTextPrefab
+      value: 
+      objectReference: {fileID: 2881310960333831531, guid: 39e49dded4a69fe4782460fd030e6b4f, type: 3}
     - target: {fileID: 6832870324644584583, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
       propertyPath: m_Color.b
       value: 0.7137255
