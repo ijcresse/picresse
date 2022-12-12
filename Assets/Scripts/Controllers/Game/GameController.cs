@@ -15,7 +15,6 @@ public class GameController : MonoBehaviour
     private PuzzleController puzzleScript;
 
     public GameObject gameMenu;
-    public bool isGameActive;
 
     private ControlData controls;
 
@@ -54,8 +53,6 @@ public class GameController : MonoBehaviour
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
-
-        isGameActive = true;
     }
 
     void Update()
@@ -81,6 +78,14 @@ public class GameController : MonoBehaviour
     {
         gameMenu.SetActive(false);
         controls.isPaused = false;
+    }
+
+    public void ActivateMenu()
+    {
+        gameMenu.SetActive(true);
+        //TODO: need a better flow for this. resetting this value to have gamemenucontroller not interfere on victory screen.
+        //... or the victory screen needs to be different from the pause menu. bold concept
+        controls.isPaused = true;
     }
 
     private void CommitMove(int move)

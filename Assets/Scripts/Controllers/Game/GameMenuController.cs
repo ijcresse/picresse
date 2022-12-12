@@ -13,8 +13,7 @@ public class GameMenuController : MonoBehaviour
 
     public void OnAlertWin()
     {
-        GameObject.Find("GameBoard").GetComponent<GameController>().isGameActive = false;
-        victoryPanel.SetActive(true);
+        GameObject.Find("GameBoard").GetComponent<GameController>().ActivateMenu();
     }
 
     public void ExitGame()
