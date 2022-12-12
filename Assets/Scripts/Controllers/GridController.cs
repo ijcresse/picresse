@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GridController : MonoBehaviour
 {
+    public bool isStarted = false;
     public int gameDimensionX { get; set; }
     public int gameDimensionY { get; set; }
     public GameObject boxPrefab;
@@ -18,11 +18,7 @@ public class GridController : MonoBehaviour
     {
         gridSprite = GameObject.Find("GridBG");
         gridSpriteSize = (x: gridSprite.transform.localScale.x, y: gridSprite.transform.localScale.y);
-    }
-
-    void Update()
-    {
-
+        isStarted = true;
     }
 
     //sets the new cell state.
@@ -37,16 +33,6 @@ public class GridController : MonoBehaviour
         int stateUpdate = -1;
         if (box.GetState() == Constants.INACTIVE)
         {
-            /*
-            if (action == Constants.KEY_FILL)
-            {
-                stateUpdate = Constants.ACTIVE;
-            }
-            else if (action == Constants.KEY_CROSS)
-            {
-                stateUpdate = Constants.CROSSED;
-            }
-            */
             stateUpdate = action;
         }
         else if (box.GetState() == Constants.ACTIVE || box.GetState() == Constants.CROSSED)
@@ -101,8 +87,25 @@ public class GridController : MonoBehaviour
         }
         return new List<List<int>> { colStates, rowStates };
     }
+
+    public List<List<bool>> GetGridState()
+    {
+        List<List<bool>> gridState = new();
+        for (int i = 0; i < gameDimensionX; i++)
+        {
+            gridState.Add(new());
+            for (int j = 0; j < gameDimensionY; j++)
+            {
+                gridState[i].Add(grid[i][j].GetComponent<BoxController>().GetState() == Constants.ACTIVE);
+            }
+        }
+        return gridState;
+    }
+
     public void SetUpGrid()
     {
+        gridSprite = GameObject.Find("GridBG");
+        gridSpriteSize = (x: gridSprite.transform.localScale.x, y: gridSprite.transform.localScale.y);
         bool sidesSame = gameDimensionX == gameDimensionY;
         float pixOffset;
         if (!sidesSame)

@@ -15,15 +15,20 @@ public class PuzzleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    public void RegisterListener()
+    {
         EventSystem.current.onBoxUpdated += OnBoxUpdated;
     }
 
     public void CreatePuzzle(int x, int y, int difficulty, Vector2 startPosition) {
         puzzle = new List<List<bool>>();
-        for (int i = 0; i < y; i++) {
+        for (int i = 0; i < x; i++) {
             string line = "";
             puzzle.Add(new List<bool>());
-            for (int j = 0; j < x; j++) {
+            for (int j = 0; j < y; j++) {
                 puzzle[i].Add(Random.Range(0f, 1f) <= difficulty * 0.15f);
                 line += puzzle[i][j] ? 'o' : 'x';
             }
@@ -78,37 +83,43 @@ public class PuzzleController : MonoBehaviour
                 bit = 0;
             }
         }
-        if (bitIndex > 0) //0505W42bAQ== || W42bAQ==
+        if (bitIndex > 0)
         {
             bytes[byteIndex] = bit;
         }
         puzzleCode = cols.ToString("00") + rows.ToString("00") + System.Convert.ToBase64String(bytes);
     }
 
+    public void GeneratePuzzleString(List<List<bool>> grid)
+    {
+        puzzle = grid;
+        GeneratePuzzleString();
+    }
+
     List<bool> GetCol(int col) {
         List<bool> puzzleCol = new();
-        for (int i = 0; i < puzzle.Count; i++) {
-            puzzleCol.Add(puzzle[i][col]);
+        for (int i = 0; i < puzzle[0].Count; i++) {
+            puzzleCol.Add(puzzle[col][i]);
         }
         return puzzleCol;
     }
 
     List<bool> GetRow(int row) {
         List<bool> puzzleRow = new();
-        for (int i = 0; i < puzzle[row].Count; i++) {
-            puzzleRow.Add(puzzle[row][i]);
+        for (int i = 0; i < puzzle.Count; i++) {
+            puzzleRow.Add(puzzle[i][row]);
         }
         return puzzleRow;
     }
-
+    
     private void CreateHints(Vector2 startPosition) {
         hintColumns = new List<HintLine>();
         hintRows = new List<HintLine>();
-        for (int x = 0; x < puzzle[0].Count; x++) {
+        for (int x = 0; x < puzzle.Count; x++) {
             List<bool> col = GetCol(x);
             CreateHintLine(GetHints(col), true, x, startPosition);
         }
-        for (int y = 0; y < puzzle.Count; y++) {
+        for (int y = 0; y < puzzle[0].Count; y++) {
             List<bool> row = GetRow(y);
             CreateHintLine(GetHints(row), false, y, startPosition);
         }

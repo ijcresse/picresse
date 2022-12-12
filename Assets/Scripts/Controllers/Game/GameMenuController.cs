@@ -13,8 +13,7 @@ public class GameMenuController : MonoBehaviour
 
     public void OnAlertWin()
     {
-        GameObject.Find("GameBoard").GetComponent<GameController>().isGameActive = false;
-        victoryPanel.SetActive(true);
+        GameObject.Find("GameBoard").GetComponent<GameController>().ActivateMenu();
     }
 
     public void ExitGame()
@@ -29,7 +28,7 @@ public class GameMenuController : MonoBehaviour
         ScenePersistence.height = Random.Range(5, 21);
         int[] difficulties = new int[3] { Constants.DIFFICULTY_EASY, Constants.DIFFICULTY_MEDIUM, Constants.DIFFICULTY_HARD };
         ScenePersistence.difficulty = difficulties[Random.Range(0, 3)];
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("DrawScene");
     }
     
     public void SharePuzzle()
