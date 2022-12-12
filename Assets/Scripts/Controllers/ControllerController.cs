@@ -11,6 +11,7 @@ namespace Assets.Scripts.Controllers
 
         public List<bool> actionKey;
 
+        public bool firstPausePress;
         public bool isPaused;
 
         public bool firstMovePress;
@@ -42,6 +43,7 @@ namespace Assets.Scripts.Controllers
             //fill, cross, hint
             actionKey = new() { false, false, false };
 
+            firstPausePress = false;
             isPaused = false;
 
             firstMovePress = false;
@@ -192,7 +194,14 @@ namespace Assets.Scripts.Controllers
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                isPaused = !isPaused;
+                if (!firstPausePress)
+                {
+                    firstPausePress = true;
+                    isPaused = !isPaused;
+                }
+            } else if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                firstPausePress = false;
             }
         }
     }

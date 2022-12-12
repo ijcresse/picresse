@@ -58,12 +58,21 @@ public class DrawController : MonoBehaviour
         {
             drawMenu.SetActive(controls.isPaused);
             return;
+        } else
+        {
+            CloseMenu();
         }
 
         controls.Move(CommitMove);
         (int x, int y) = cursorScript.GetGamePosition();
         
         controls.Action(x, y, gridScript.SetCellState, gridScript.OverwriteCellState);
+    }
+
+    public void CloseMenu()
+    {
+        drawMenu.SetActive(false);
+        controls.isPaused = false;
     }
 
     private void CommitMove(int move)

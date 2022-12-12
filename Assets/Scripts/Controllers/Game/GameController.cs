@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController cursorScript;
     private PuzzleController puzzleScript;
+
+    public GameObject gameMenu;
     public bool isGameActive;
 
     private ControlData controls;
@@ -58,15 +60,27 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (!isGameActive)
+        controls.SetKeyState();
+        
+        //TODO: i think it's time to refactor controls into an event system, not update every frame.
+        if (controls.isPaused)
         {
+            gameMenu.SetActive(true);
             return;
+        } else
+        {
+            CloseMenu();
         }
 
-        controls.SetKeyState();
         controls.Move(CommitMove);
         (int x, int y) = cursorScript.GetGamePosition();
         controls.Action(x, y, gridScript.SetCellState, gridScript.OverwriteCellState);
+    }
+
+    public void CloseMenu()
+    {
+        gameMenu.SetActive(false);
+        controls.isPaused = false;
     }
 
     private void CommitMove(int move)
