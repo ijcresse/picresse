@@ -22,7 +22,7 @@ public class DrawController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controls = new ControlData(0.3f, 0.08f);
+        controls = new ControlData(0.45f, 0.15f);
 
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
