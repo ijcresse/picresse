@@ -385,7 +385,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ~PUZZLE COMPLETE~
+  m_text: PAUSED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1348,7 +1348,6 @@ MonoBehaviour:
   hintRows: {fileID: 751176033660996516, guid: eafc2255fb1931b459acd6acf4362fed, type: 3}
   cursorPrefab: {fileID: 8463095937945697698, guid: 03f4f5bcafa8bd2409f3f4c969680ff3, type: 3}
   gameMenu: {fileID: 1621868823}
-  isGameActive: 0
 --- !u!114 &1589082267
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,12 +20,27 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        //TODO: these should be constants.
-        controls = new ControlData(0.3f, 0.08f);
+        SetFields();
+        SetUpGame();
+    }
 
-        gridScript = GameObject.Find("Grid").GetComponent<GridController>();
-        puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-        puzzleScript.RegisterListener();
+    private void SetFields()
+    {
+        if (gridScript == null)
+        {
+            gridScript = GameObject.Find("Grid").GetComponent<GridController>();
+        }
+        if (puzzleScript == null)
+        {
+            puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+            puzzleScript.RegisterListener();
+        }
+    }
+
+    public void SetUpGame()
+    {
+        //TODO: these should be constants.
+        controls = new ControlData(0.45f, 0.15f);
 
         if (ScenePersistence.base64Code != null)
         {
@@ -38,13 +53,16 @@ public class GameController : MonoBehaviour
             gridScript.gameDimensionX = ScenePersistence.width;
             gridScript.gameDimensionY = ScenePersistence.height;
             puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, ScenePersistence.difficulty, gridScript.startPosition);
-        } else
+        }
+        else
         {
             Debug.Log("Invalid start flow. Leaving this in for debugging purposes but this should not be normally accessed.");
             gridScript.gameDimensionX = gameDimensionX;
             gridScript.gameDimensionY = gameDimensionY;
             puzzleScript.CreatePuzzle(gridScript.gameDimensionX, gridScript.gameDimensionY, Constants.DIFFICULTY_MEDIUM, gridScript.startPosition);
         }
+
+        ClearScenePersistence();
 
         gridScript.SetUpGrid();
 
@@ -53,6 +71,12 @@ public class GameController : MonoBehaviour
         GameObject cursor = Instantiate(cursorPrefab, gridScript.startPosition, cursorPrefab.transform.rotation);
         cursor.transform.localScale = new Vector2(boxSize * 2, boxSize * 2);
         cursorScript = cursor.GetComponent<CursorController>();
+    }
+
+    private void ClearScenePersistence()
+    {
+        ScenePersistence.base64Code = null;
+        ScenePersistence.difficulty = 0;
     }
 
     void Update()

@@ -1,9 +1,12 @@
 using Assets.Scripts.Constants;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using System.Runtime.InteropServices;
 public class GameMenuController : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern void SendTextToBrowser(string text);
+
     public GameObject victoryPanel;
 
     public void Start()
@@ -28,14 +31,14 @@ public class GameMenuController : MonoBehaviour
         ScenePersistence.height = Random.Range(5, 21);
         int[] difficulties = new int[3] { Constants.DIFFICULTY_EASY, Constants.DIFFICULTY_MEDIUM, Constants.DIFFICULTY_HARD };
         ScenePersistence.difficulty = difficulties[Random.Range(0, 3)];
-        SceneManager.LoadScene("DrawScene");
+        SceneManager.LoadScene("GameScene");
     }
     
     public void SharePuzzle()
     {
         string puzzleCode = GameObject.Find("Puzzle").GetComponent<PuzzleController>().puzzleCode;
-        GUIUtility.systemCopyBuffer = puzzleCode;
-        //TODO: add alert saying copied to clipboard. which means add alert system i guess
+        SendTextToBrowser(puzzleCode);
+        //GUIUtility.systemCopyBuffer = puzzleCode;
     }
 
     public void OnDestroy()

@@ -2,9 +2,14 @@ using Assets.Scripts.Constants;
 using Assets.Scripts.Controllers;
 using UnityEngine;
 using TMPro;
+using System.Runtime.InteropServices;
 
 public class DrawController : MonoBehaviour
 {
+
+    [DllImport("__Internal")]
+    private static extern void SendTextToBrowser(string text);
+
     public int gameDimensionX;
     public int gameDimensionY;
     public GameObject clock;
@@ -22,7 +27,7 @@ public class DrawController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controls = new ControlData(0.3f, 0.08f);
+        controls = new ControlData(0.45f, 0.15f);
 
         gridScript = GameObject.Find("Grid").GetComponent<GridController>();
         puzzleScript = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
@@ -104,6 +109,6 @@ public class DrawController : MonoBehaviour
     {
         puzzleScript.GeneratePuzzleString(gridScript.GetGridState());
         GameObject.Find("DrawCodeText").GetComponent<TextMeshProUGUI>().text = puzzleScript.puzzleCode;
-        GUIUtility.systemCopyBuffer = puzzleScript.puzzleCode;
+        SendTextToBrowser(puzzleScript.puzzleCode);
     }
 }
