@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.InteropServices;
 
 public class DrawMenuController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [DllImport("__Internal")]
+    private static extern void SendTextToBrowser(string text);
 
     public void ExitDraw()
     {
@@ -19,7 +15,7 @@ public class DrawMenuController : MonoBehaviour
     public void CopyToClipboard()
     {
         string puzzleCode = GameObject.Find("Puzzle").GetComponent<PuzzleController>().puzzleCode;
-        GUIUtility.systemCopyBuffer = puzzleCode;
+        SendTextToBrowser(puzzleCode);
     }
 
     /*

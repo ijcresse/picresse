@@ -1,9 +1,12 @@
 using Assets.Scripts.Constants;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using System.Runtime.InteropServices;
 public class GameMenuController : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern void SendTextToBrowser(string text);
+
     public GameObject victoryPanel;
 
     public void Start()
@@ -34,8 +37,8 @@ public class GameMenuController : MonoBehaviour
     public void SharePuzzle()
     {
         string puzzleCode = GameObject.Find("Puzzle").GetComponent<PuzzleController>().puzzleCode;
-        GUIUtility.systemCopyBuffer = puzzleCode;
-        //TODO: add alert saying copied to clipboard. which means add alert system i guess
+        SendTextToBrowser(puzzleCode);
+        //GUIUtility.systemCopyBuffer = puzzleCode;
     }
 
     public void OnDestroy()
